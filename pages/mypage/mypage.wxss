@@ -1,0 +1,130 @@
+/* pages/mypage/mypage.wxss */
+/* 页面整体样式 */
+page {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  position: fixed;
+  background-color: #f0f0f0; /* 浅灰色背景 */
+}
+/* 用户信息区域 */
+.user-header {
+  padding: 40rpx;
+  
+  display: flex;
+  align-items: center;
+  
+}
+.hidden-button {
+  left: 39rpx; top: 39rpx;
+  z-index: 0; /* 按钮层级更低 */
+  background: transparent; /* 去除背景 */
+  border: none; /* 去除边框 */
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  position: absolute; 
+}
+.hidden-button2 {
+  position: absolute;
+  z-index: 0; /* 按钮层级更低 */
+  background: transparent; /* 去除背景 */
+  border: none; /* 去除边框 */
+  width: 145rpx; height: 58rpx; display: block; box-sizing: border-box; position: absolute; left: 152rpx; top: 75rpx
+}
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  position: relative; left: -29rpx; top: 0rpx
+}
+
+.username {
+  font-size: 36rpx;
+  font-weight: bold;
+  color:black;
+  position: relative; left: -29rpx; top: 0rpx
+}
+
+/* 资产卡片 */
+.assets-card {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  margin: 20rpx;
+  padding: 30rpx 0;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+}
+
+.asset-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.asset-icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 10rpx;
+}
+
+/* SVIP横幅 */
+.svip-banner {
+  background: linear-gradient(to right, #FF3B3B, #FF6A6A);
+  margin: 20rpx;
+  padding: 30rpx;
+  border-radius: 12rpx;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upgrade-btn {
+  background: white;
+  color: #FF3B3B;
+  border-radius: 20rpx;
+  padding: 10rpx 30rpx;
+  font-size: 28rpx;
+}
+
+/* 功能网格 */
+.function-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: white;
+  margin: 20rpx;
+  padding: 30rpx 0;
+  border-radius: 12rpx;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+}
+
+.grid-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 快递列表 */
+.express-list {
+  background: white;
+  margin: 20rpx;
+  padding: 30rpx;
+  border-radius: 12rpx;
+}
+
+.express-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee;
+}

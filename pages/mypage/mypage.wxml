@@ -1,0 +1,35 @@
+<!--pages/mypage/mypage.wxml-->
+<!-- 用户信息区域 -->
+<view class="user-header">
+
+<image class="avatar" src="{{avatarUrl}}"></image>
+<!-- userInfo.nickName -->
+  <text class="username">{{isLogin ?  '欢迎尊贵的svip用户': '点击登录'}}</text>
+
+  <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+</button>
+
+<button wx:if="{{isLogin==false}}" class="hidden-button2" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+</button>
+
+</view>
+
+
+<!-- 资产概览 -->
+<view class="assets-card">
+  <view class="asset-item" wx:for="{{assets}}" wx:key="index">
+    <image class="asset-icon" src="{{item.icon}}"></image>
+    <text class="asset-text">{{item.value}}</text>
+    <text class="asset-label">{{item.label}}</text>
+  </view>
+</view>
+
+<!-- 核心功能入口 -->
+<view class="function-grid">
+  <view class="grid-item" wx:for="{{functions}}" wx:key="index" bindtap="navigateTo" data-url="{{item.url}}">
+    <image class="grid-icon" src="{{item.icon}}"></image>
+    <text>{{item.name}}</text>
+  </view>
+</view>
+
+<!-- 快递信息（登录后显示） -->

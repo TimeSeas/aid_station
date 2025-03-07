@@ -1,0 +1,31 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/mypage/mypage"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true,"backgroundTextStyle": "dark" ,
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#000000",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "主页"
+      },
+      {
+        "pagePath": "pages/mypage/mypage",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
+}
