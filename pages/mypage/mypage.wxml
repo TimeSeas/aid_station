@@ -1,35 +1,72 @@
-<!--pages/mypage/mypage.wxml-->
-<!-- 用户信息区域 -->
-<view class="user-header">
-
-<image class="avatar" src="{{avatarUrl}}"></image>
-<!-- userInfo.nickName -->
-  <text class="username">{{isLogin ?  '欢迎尊贵的svip用户': '点击登录'}}</text>
-
-  <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-</button>
-
-<button wx:if="{{isLogin==false}}" class="hidden-button2" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-</button>
-
-</view>
-
-
-<!-- 资产概览 -->
-<view class="assets-card">
-  <view class="asset-item" wx:for="{{assets}}" wx:key="index">
-    <image class="asset-icon" src="{{item.icon}}"></image>
-    <text class="asset-text">{{item.value}}</text>
-    <text class="asset-label">{{item.label}}</text>
+<!--pages/user/index/index.wxml-->
+<scroll-view scroll-y class="page-content" >
+  <!-- refresher-enabled 
+scroll-with-animation
+enable-back-to-top="{{isActive}}"
+refresher-triggered="{{refreshState}}"
+bindrefresherrefresh="onRefresh"
+bindrefresherrestore="abortRefresh"
+bindrefresherabort="abortRefresh"
+bindscrolltolower="onLoadMore" -->
+  <view class="a">
+    <view class="view" />
   </view>
-</view>
-
-<!-- 核心功能入口 -->
-<view class="function-grid">
-  <view class="grid-item" wx:for="{{functions}}" wx:key="index" bindtap="navigateTo" data-url="{{item.url}}">
-    <image class="grid-icon" src="{{item.icon}}"></image>
-    <text>{{item.name}}</text>
+  <view class="container">
+    <view class="bar1">
+      <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" wx:if="{{isLogin==false}}">
+        点击登录
+</button>
+      <image class="avatar" src="{{avatarUrl}}"></image>
+      <view class="user">
+        
+        <view class="name"wx:if="{{isLogin}}">{{username}}</view>
+        <view class="sub" wx:if="{{isLogin}}">珍惜现在 音节未来</view>
+      </view>
+      <view class="card"><iconfont type="saoyisao" size="25px" color="white" /></view>
+    </view>
+    <view class="bar2">
+      <view class="item">
+        <view class="num">{{userfollower}}</view>
+        粉丝
+      </view>
+      <view class="item">
+        <view class="num">{{userfeed}}</view>
+        动态
+      </view>
+      <view class="item">
+        <view class="num">{{userfollow}}</view>
+        关注
+      </view>
+    </view>
+    <view class="label">我的订单</view>
+    <view class="bar3">
+      <view class="item">
+        <image class="ico" src="/images/icon/2.png"></image>
+        <view>待付款</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/1.png"></image>
+        <view>待发货</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/3.png"></image>
+        <view>待收货</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/4.png"></image>
+        <view>待评价</view>
+      </view>
+    </view>
+    <view class="label">我的爱宠</view>
+    <view class="bar4">
+      <view class="item"></view>
+      <view class="item"></view>
+    </view>
+    <view class="list">
+      <view class="item"><iconfont type="favorite" class="ico" size="20px" />我的收藏</view>
+      <view class="item"><iconfont type="comment" class="ico" size="20px" />我的评论</view>
+      <view class="item"><iconfont type="share" class="ico" size="20px" />我的分享</view>
+    </view>
   </view>
-</view>
-
-<!-- 快递信息（登录后显示） -->
+</scroll-view>
+<view class="page-tabbar page-ipx-safe-area"></view>

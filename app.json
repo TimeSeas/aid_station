@@ -5,9 +5,10 @@
     "pages/mypage/mypage"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true,"backgroundTextStyle": "dark" ,
-    "navigationBarBackgroundColor": "#ffffff"
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fe697c",
+    "backgroundColor": "#808080"
   },
   "tabBar": {
     "color": "#999999",
@@ -24,6 +25,9 @@
         "text": "我的"
       }
     ]
+  },
+  "usingComponents": {
+    "iconfont": "components/iconfont/iconfont"
   },
   "style": "v2",
   "componentFramework": "glass-easel",
