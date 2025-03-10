@@ -29,61 +29,25 @@ Page({
       avatarUrl,
     })
   },
-
-
-  
-   onRefresh() {
-    this.setData({
-      refreshState: true,
-    })
-    console.log("topic onRefresh")
-    setTimeout(() => {
-      if (this.data.refreshState) {
-        console.log("topic refreshing")
-        this.data.list = []
-        canLoading = true
-        loadPages = 1
-        // let data = this._getDemoData()
-        // this._loadList(data)
-      }
-    }, 1000)
+  onShow: function () {
+    if (typeof this.getTabBar === 'function' &&
+      this.getTabBar()) {
+      this.getTabBar().setData({ active: 2 })
+    }
   },
-  /**
-   * 刷新停止处理
-   */
-  abortRefresh() {
-    console.log("topic abortRefresh")
-    if (this.data.refreshState) {
+  changeNavTab(e) {
+    let index
+    if (e.detail.source == "touch") {
+      index = e.detail.current;
+    } else if (e.currentTarget.dataset.index != null) {
+      index = e.currentTarget.dataset.index
+    }
+    if (index != null && index != this.data.active) {
+      console.log("change navBar tab")
       this.setData({
-        refreshState: false,
+        active: index,
+        pos: this.data.list[index].pos,
       })
     }
-  },
-  /**
-   * 加载更多处理
-   */
-  onLoadMore() {
-    console.log("topic loadmore")
-    if (canLoading) {
-      this.setData({
-        loadState: "loading",
-      })
-      setTimeout(() => {
-        // let data = this._getDemoData()
-        loadPages++
-        // this._loadList(data)
-      }, 1000)
-    }
-  },
-  _loadList(data) {
-    console.log("topic loadlist")
-    if (loadPages > 3 || data.length == 0) {
-      console.log("topic finishloading")
-      canLoading = false
-    }
-    this.setData({
-      list: this.data.list.concat(data),refreshState: false,
-      loadState: "finish"
-    })
   },
 })

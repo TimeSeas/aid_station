@@ -1,0 +1,27 @@
+<!--custom-tab-bar/index.wxml-->
+<view class="tab-bar">
+  <view wx:for="{{list}}" wx:key="index" class="item" bindtap="switchTab" data-index="{{index}}">
+    <iconfont wx:if="{{item.isPublishBtn}}"  type="{{item.icon}}" class="publish" size="22px" color="white" />
+    <iconfont wx:else type="{{active === index ? item.selectedIcon : item.icon}}" size="27px" class="{{active === index ? 'active' : ''}}" />
+  </view>
+</view>
+<cover-view class="mask {{maskAnt}}" wx:if="{{maskState}}" bindtap="closeMask">
+  <cover-view class="content">
+    <cover-view class="list">
+      <cover-view class="btn" bindtap="onPublishDynamic">  <!-- 添加点击事件 -->
+        <cover-view class="ico1">
+          <cover-image src="/images/icon/5.png" />
+        </cover-view>
+        <cover-view>发表动态</cover-view>
+      </cover-view>
+      <cover-view class="btn" bindtap="onPublishHelp">  <!-- 添加点击事件 -->
+        <cover-view class="ico2">
+          <cover-image src="/images/icon/6.png" />
+        </cover-view>
+        <cover-view>发布求助</cover-view>
+      </cover-view>
+    </cover-view>
+    <cover-view class="close"><cover-image src="/images/icon/close.png" class="pic" /></cover-view>
+  </cover-view>
+</cover-view>
+

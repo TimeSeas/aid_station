@@ -2,23 +2,26 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/mypage/mypage"
+    "pages/mypage/mypage",
+    "pages/publish/dynamic/index",
+    "pages/publish/help/index"
   ],
   "window": {
     "enablePullDownRefresh": true,
-    "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#fe697c",
-    "backgroundColor": "#808080"
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#000000",
     "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "主页"
+        "text": "首页"
       },
       {
         "pagePath": "pages/mypage/mypage",
@@ -27,7 +30,8 @@
     ]
   },
   "usingComponents": {
-    "iconfont": "components/iconfont/iconfont"
+    "iconfont": "components/iconfont/iconfont",
+    "custom-tab-bar": "/custom-tab-bar/index"
   },
   "style": "v2",
   "componentFramework": "glass-easel",

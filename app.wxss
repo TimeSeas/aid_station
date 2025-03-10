@@ -1,7 +1,7 @@
 /**app.wxss**/
 
 @import "color.wxss";
-
+@import '/components/iconfont/iconfont.wxss';
 page{
 	height: 100%;
 	width: 100%;
