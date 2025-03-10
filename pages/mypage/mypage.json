@@ -1,6 +1,8 @@
 {
   "usingComponents": {},
+  "component": true,
   "navigationBarTitleText": "个人中心",
-  "navigationBarTextStyle": "white"
-  
+  "navigationBarTextStyle": "white",
+  "disableScroll": true,
+  "backgroundColor": "#F00"
 }
