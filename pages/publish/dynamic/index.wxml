@@ -1,0 +1,10 @@
+<!-- pages/publish/publish.wxml -->
+<view class="container">
+  <textarea 
+    class="content-input" 
+    placeholder="请输入动态内容" 
+    bindinput="onContentInput"
+    value="{{content}}"
+  ></textarea>
+  <button class="publish-btn" type="primary" bindtap="onPublish">发布</button>
+</view>

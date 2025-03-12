@@ -1,70 +1,31 @@
-
+// index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    currentIndex: 0,
+    tabs: ['广场', '动态', '科普'],
+    swiperList: [
+      { image: '/images/animals/dog1.jpg' },
+      { image: '/images/animals/dog2.jpg' },
+      { image: '/images/animals/dog3.jpg' }
+    ]
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  // 切换选项卡
+  switchTab(e) {
+    const index = e.currentTarget.dataset.index
+    this.setData({ currentIndex: index })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 滑动切换
+  swiperChange(e) {
+    const current = e.detail.current
+    this.setData({ currentIndex: current })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  },
-  goToKnowledge() {
-    wx.navigateTo({ url: '/pages/knowledge/index' });
+  // 点击跳转
+  onpost(){
+    wx.navigateTo({
+      url: "/pages/home/post/post"  // 请确认实际页面路径
+  });
   }
-});
-
+})

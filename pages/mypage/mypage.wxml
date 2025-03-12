@@ -20,7 +20,7 @@ bindscrolltolower="onLoadMore" -->
       <view class="user">
         
         <view class="name"wx:if="{{isLogin}}">{{username}}</view>
-        <view class="sub" wx:if="{{isLogin}}">珍惜现在 音节未来</view>
+        <view class="sub" wx:if="{{isLogin}}">关爱生命，人人有责</view>
       </view>
       <view class="card"><iconfont type="saoyisao" size="25px" color="white" /></view>
     </view>
