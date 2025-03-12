@@ -1,0 +1,26 @@
+<!-- pages/knowledge/detail.wxml -->
+<!-- 页面容器 -->
+<view class="container">
+  <image class="header-image" src="{{article.coverImage}}"/>
+  
+  <view class="content">
+    <text class="title">{{article.title}}</text>
+    <text class="meta">发布时间：{{article.date}}</text>
+    
+    <rich-text 
+      class="article-body" 
+      nodes="{{article.content}}"
+    />
+    
+    <button 
+      class="fav-btn" 
+      bindtap="toggleFavorite"
+      wx:if="{{!isFavorite}}"
+    >收藏</button>
+    <button 
+      class="fav-btn active" 
+      bindtap="toggleFavorite"
+      wx:if="{{isFavorite}}"
+    >已收藏</button>
+  </view>
+</view>

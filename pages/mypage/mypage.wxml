@@ -37,6 +37,11 @@ bindscrolltolower="onLoadMore" -->
         <view class="num">{{userfollow}}</view>
         关注
       </view>
+      <!-- 在mypage.wxml的列表区域添加 -->
+      <view class="item" bindtap="goToFavorites">
+      <iconfont type="favorite" class="ico" size="20px" />
+       我的收藏
+      </view>
     </view>
     <view class="label">我的订单</view>
     <view class="bar3">

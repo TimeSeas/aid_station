@@ -1,8 +1,11 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/mypage/mypage"
+    "pages/knowledge/index",
+    "pages/knowledge/detail",
+    "pages/favorites/index",
+    "pages/mypage/mypage",
+    "pages/logs/logs"
   ],
   "window": {
     "enablePullDownRefresh": true,

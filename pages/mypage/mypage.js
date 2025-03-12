@@ -7,6 +7,11 @@ Page({
   /**
    * 页面的初始数据
    */
+  // pages/mypage/mypage.js
+  goToFavorites() {
+  wx.navigateTo({ url: '/pages/favorites/index' });
+  },
+  
   data: {
     isLogin: false,
     userInfo: {},

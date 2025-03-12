@@ -1,2 +1,7 @@
-<!--index.wxml-->
+<!--pages/index/index.wxml-->
 
+<!-- 在现有index.wxml中添加入口 -->
+<view class="feature-card" bindtap="goToKnowledge" style="height: 156rpx; display: block; box-sizing: border-box; width: 750rpx; position: relative; left: 1rpx; top: 274rpx">
+  <image style="height: 104rpx; display: inline-block; box-sizing: border-box; width: 125rpx; position: relative; left: 565rpx; top: 12rpx" class="icon" src="/images/icon/home.png"/>
+  <text class="text" style="position: relative; left: 425rpx; top: 45rpx">流浪狗科普</text>
+</view>
