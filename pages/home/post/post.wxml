@@ -1,11 +1,3 @@
-<view class="post-list">
-  <block wx:for="{{posts}}" wx:key="id">
-    <view class="post-item">
-      <view class="content">{{item.content}}</view>
-      <view class="meta">
-        <text>用户: {{item.username}}</text>
-        <text>{{item.created_at}}</text>
-      </view>
-    </view>
-  </block>
+<view wx:for="{{users}}" wx:key="id">
+  <text>{{item.user_id}}: {{item.content}}</text>
 </view>

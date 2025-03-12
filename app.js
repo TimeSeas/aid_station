@@ -2,7 +2,8 @@
 App({
     //全局数据，其他页面可通过getApp().globalData获取数据
     globalData: {
-      
+      userId:1,
+      userInfo: null
     },
   onLaunch() {
     // 展示本地存储能力
@@ -16,9 +17,6 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
-  },
-  globalData: {
-    userInfo: null
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

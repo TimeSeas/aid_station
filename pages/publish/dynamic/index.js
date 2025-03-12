@@ -1,63 +1,41 @@
+// pages/publish/publish.js
 Page({
   data: {
-    newContent: '',
-    currentUserId: 1, // 实际应从登录状态获取
-    isInputEmpty: true
+    content: '',
+    userId: getApp().globalData.userId // 假设已登录，实际需从全局或缓存获取
   },
 
-  // 输入内容处理
   onContentInput(e) {
-    const content = e.detail.value.trim()
-    this.setData({
-      newContent: e.detail.value,
-      isInputEmpty: content.length === 0
-    })
+    this.setData({ content: e.detail.value });
   },
 
-  // 发布处理
-  handlePublish() {
-    if (this.data.isInputEmpty) return
-
-    const { newContent, currentUserId } = this.data
-    wx.showLoading({
-      title: '发布中...',
-      mask: true
-    })
+  onPublish() {
+    const { content, userId } = this.data;
+    
+    if (!content.trim()) {
+      wx.showToast({ title: '内容不能为空', icon: 'none' });
+      return;
+    }
 
     wx.request({
+      url: 'http://118.178.92.183/publish_post.php',
       method: 'POST',
-      url: 'http://10.225.71.177:3000/post',
       data: {
-        content: newContent,
-        user_id: currentUserId
+        user_id: userId,
+        content: content
       },
       success: (res) => {
-        wx.hideLoading()
-        if (res.statusCode === 200) {
-          wx.showToast({
-            title: '发布成功',
-            icon: 'success',
-            duration: 1500,
-            complete: () => {
-              wx.navigateBack()
-            }
-          })
+        if (res.data.code === 200) {
+          wx.showToast({ title: '发布成功' });
+          setTimeout(() => wx.navigateBack(), 1500);
         } else {
-          this.showError('发布失败')
+          wx.showToast({ title: res.data.msg || '发布失败', icon: 'none' });
+          console.log(res);
         }
       },
       fail: () => {
-        wx.hideLoading()
-        this.showError('网络错误')
+        wx.showToast({ title: '网络错误', icon: 'none' });
       }
-    })
-  },
-
-  showError(msg) {
-    wx.showToast({
-      title: msg,
-      icon: 'none',
-      duration: 2000
-    })
+    });
   }
-})
+});

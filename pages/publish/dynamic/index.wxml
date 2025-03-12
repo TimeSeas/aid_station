@@ -1,18 +1,10 @@
+<!-- pages/publish/publish.wxml -->
 <view class="container">
   <textarea 
     class="content-input" 
-    placeholder="分享你的精彩瞬间..." 
-    value="{{newContent}}" 
+    placeholder="请输入动态内容" 
     bindinput="onContentInput"
-    auto-height
-    maxlength="500"
-  />
-  <view class="bottom-bar">
-    <view 
-      class="publish-btn {{isInputEmpty ? 'disabled' : 'active'}}"
-      bindtap="handlePublish"
-    >
-      发布
-    </view>
-  </view>
+    value="{{content}}"
+  ></textarea>
+  <button class="publish-btn" type="primary" bindtap="onPublish">发布</button>
 </view>
