@@ -1,0 +1,18 @@
+.post-list {
+  padding: 20rpx;
+}
+.post-item {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+}
+.content {
+  font-size: 32rpx;
+  line-height: 1.6;
+}
+.meta {
+  margin-top: 20rpx;
+  color: #999;
+  font-size: 26rpx;
+}

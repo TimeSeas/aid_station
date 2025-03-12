@@ -20,5 +20,12 @@ Page({
   swiperChange(e) {
     const current = e.detail.current
     this.setData({ currentIndex: current })
+  },
+
+  // 点击跳转
+  onpost(){
+    wx.navigateTo({
+      url: "/pages/home/post/post"  // 请确认实际页面路径
+  });
   }
 })

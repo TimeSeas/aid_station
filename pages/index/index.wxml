@@ -45,7 +45,7 @@
     <swiper-item>
       <scroll-view scroll-y class="content-scroll">
         <!-- 动态内容 -->
-        <view class="content-item">救助站日常动态</view>
+        <view class="content-item" bindtap="onpost">救助站日常动态</view>
         <view class="content-item">成功救助案例</view>
         <view class="content-item">领养后续故事</view>
       </scroll-view>

@@ -1,2 +1,18 @@
-<!--pages/publish/dynamic/index.wxml-->
-<text>这是动态页面</text>
+<view class="container">
+  <textarea 
+    class="content-input" 
+    placeholder="分享你的精彩瞬间..." 
+    value="{{newContent}}" 
+    bindinput="onContentInput"
+    auto-height
+    maxlength="500"
+  />
+  <view class="bottom-bar">
+    <view 
+      class="publish-btn {{isInputEmpty ? 'disabled' : 'active'}}"
+      bindtap="handlePublish"
+    >
+      发布
+    </view>
+  </view>
+</view>

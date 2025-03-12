@@ -4,7 +4,8 @@
     "pages/logs/logs",
     "pages/mypage/mypage",
     "pages/publish/dynamic/index",
-    "pages/publish/help/index"
+    "pages/publish/help/index",
+    "pages/home/post/post"
   ],
   "window": {
     "enablePullDownRefresh": true,

@@ -1,66 +1,63 @@
-// pages/publish/dynamic/index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    newContent: '',
+    currentUserId: 1, // 实际应从登录状态获取
+    isInputEmpty: true
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  // 输入内容处理
+  onContentInput(e) {
+    const content = e.detail.value.trim()
+    this.setData({
+      newContent: e.detail.value,
+      isInputEmpty: content.length === 0
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
+  // 发布处理
+  handlePublish() {
+    if (this.data.isInputEmpty) return
 
+    const { newContent, currentUserId } = this.data
+    wx.showLoading({
+      title: '发布中...',
+      mask: true
+    })
+
+    wx.request({
+      method: 'POST',
+      url: 'http://10.225.71.177:3000/post',
+      data: {
+        content: newContent,
+        user_id: currentUserId
+      },
+      success: (res) => {
+        wx.hideLoading()
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '发布成功',
+            icon: 'success',
+            duration: 1500,
+            complete: () => {
+              wx.navigateBack()
+            }
+          })
+        } else {
+          this.showError('发布失败')
+        }
+      },
+      fail: () => {
+        wx.hideLoading()
+        this.showError('网络错误')
+      }
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  showError(msg) {
+    wx.showToast({
+      title: msg,
+      icon: 'none',
+      duration: 2000
+    })
   }
 })
