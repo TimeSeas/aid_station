@@ -5,7 +5,10 @@
     "pages/mypage/mypage",
     "pages/publish/dynamic/index",
     "pages/publish/help/index",
-    "pages/home/post/post"
+    "pages/home/post/post",
+    "pages/knowledge/index",
+    "pages/knowledge/detail",
+    "pages/favorites/index"
   ],
   "window": {
     "enablePullDownRefresh": true,

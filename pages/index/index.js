@@ -27,5 +27,10 @@ Page({
     wx.navigateTo({
       url: "/pages/home/post/post"  // 请确认实际页面路径
   });
+  },
+  onkepu(){
+    wx.navigateTo({
+      url: "/pages/knowledge/index"  // 请确认实际页面路径
+  });
   }
 })
