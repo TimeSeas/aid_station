@@ -1,14 +1,18 @@
 {
   "pages": [
+    "pages/mypage/mypage",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/mypage/mypage",
+    
     "pages/publish/dynamic/index",
     "pages/publish/help/index",
     "pages/home/post/post",
     "pages/knowledge/index",
     "pages/knowledge/detail",
-    "pages/favorites/index"
+    "pages/favorites/index",
+    "pages/myhome/login/login",
+    "pages/myhome/login-form/login-form",
+    "pages/myhome/register-form/register-form"
   ],
   "window": {
     "enablePullDownRefresh": true,

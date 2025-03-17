@@ -25,7 +25,9 @@ Page({
         content: content
       },
       success: (res) => {
+        console.log(res)
         if (res.data.code === 200) {
+
           wx.showToast({ title: '发布成功' });
           setTimeout(() => wx.navigateBack(), 1500);
         } else {

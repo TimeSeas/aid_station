@@ -1,20 +1,15 @@
 <!--pages/user/index/index.wxml-->
 <scroll-view scroll-y class="page-content" >
-  <!-- refresher-enabled 
-scroll-with-animation
-enable-back-to-top="{{isActive}}"
-refresher-triggered="{{refreshState}}"
-bindrefresherrefresh="onRefresh"
-bindrefresherrestore="abortRefresh"
-bindrefresherabort="abortRefresh"
-bindscrolltolower="onLoadMore" -->
   <view class="a">
     <view class="view" />
   </view>
   <view class="container">
     <view class="bar1">
-      <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" wx:if="{{isLogin==false}}">
-        点击登录
+      <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" wx:if="{{isLogin==false}}" style="position: absolute; left: 45rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
+        微信登录
+</button>
+<button class="hidden-button"bind:tap="navigateTologin" wx:if="{{isLogin==false}}" style="position: absolute; left: 306rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
+        手机号登录
 </button>
       <image class="avatar" src="{{avatarUrl}}"></image>
       <view class="user">

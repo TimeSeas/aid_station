@@ -18,13 +18,14 @@ if (!$user_id || !$content) {
 
 // 数据库配置
 $servername = "118.178.92.183";
-$username = "root";
-$password = "123456";
+// 修改后的数据库配置变量名
+$db_username = "zlx_user";
+$db_password = "zlx_password";
 $dbname = "wxproject";
 
 try {
     // 创建连接
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $db_username, $db_password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // 插入动态（images设为NULL）

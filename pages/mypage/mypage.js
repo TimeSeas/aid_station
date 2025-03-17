@@ -14,9 +14,8 @@ Page({
   
   data: {
     isLogin: false,
-    userInfo: {},
     avatarUrl: defaultAvatarUrl,
-    username:'默认用户',
+    username:'',
     userfollower:0,
     userfeed:0,
     userfollow:0,
@@ -39,6 +38,12 @@ Page({
       this.getTabBar()) {
       this.getTabBar().setData({ active: 2 })
     }
+if(getApp().globalData.userId){
+  this.setData({
+    isLogin: true,
+  })
+  
+}
   },
   changeNavTab(e) {
     let index
@@ -55,4 +60,26 @@ Page({
       })
     }
   },
+      // 获取当前用户信息
+ onLoad() {
+    const userId = getApp().globalData.userId
+    wx.request({
+      url: `http://118.178.92.183/api.php?action=getUsers&id=${userId}`,
+      success: (res) => {
+        // console.log(res.data)
+        if (res.data) {
+            this.setData({
+                // avatarUrl: res.data.avatar || defaultAvatarUrl,
+                username: res.data.username || ''
+            })
+        }
+    }
+    })
+  },
+      navigateTologin(){
+        wx.navigateTo({
+          url: "/pages/myhome/login/login"  // 请确认实际页面路径
+      });
+    },
+  
 })

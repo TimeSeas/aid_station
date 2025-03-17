@@ -1,0 +1,9 @@
+<!-- mobile_register.wxml 修改后 -->
+<view class="container">
+  <view class="input-group">
+    <input class="input-item" placeholder="手机号" type="number" bindinput="onPhoneInput"/>
+    <input class="input-item" placeholder="用户名" bindinput="onUsernameInput"/>
+    <input class="input-item" placeholder="密码" password bindinput="onPasswordInput"/>
+  </view>
+  <button class="btn-register" bindtap="handleRegister">立即注册</button>
+</view>

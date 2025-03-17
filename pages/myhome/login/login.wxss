@@ -1,0 +1,28 @@
+/* login.wxss */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.button-group {
+  width: 80%;
+}
+
+.btn-login, .btn-register {
+  margin: 30rpx 0;
+  height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+}
+
+.btn-login {
+  background: #07c160;
+  color: white;
+}
+
+.btn-register {
+  background: #1989fa;
+  color: white;
+}
