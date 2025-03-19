@@ -24,6 +24,40 @@ if ($_GET['action'] == 'getUsers') {
   echo json_encode($data);
 }
 
+if ($_GET['action'] == 'getUserStats') {
+  $userId = $_GET['user_id'];
+  
+  // 使用预处理防止SQL注入
+  $stmt = $conn->prepare("
+      SELECT 
+          (SELECT COUNT(*) FROM post WHERE user_id = ?) AS post_count,
+          (SELECT COUNT(*) FROM user_follow WHERE followed_id = ?) AS followers,
+          (SELECT COUNT(*) FROM user_follow WHERE follower_id = ?) AS following
+  ");
+  $stmt->bind_param("iii", $userId, $userId, $userId);
+  $stmt->execute();
+  
+  $result = $stmt->get_result();
+  echo json_encode($result->fetch_assoc());
+}
+
+// 关注/取关接口
+if ($_GET['action'] == 'handleFollow') {
+  $follower = $_POST['follower_id'];
+  $followed = $_POST['followed_id'];
+  
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $stmt = $conn->prepare("INSERT IGNORE INTO user_follow VALUES (NULL,?,?,NOW())");
+      $stmt->bind_param("ii", $follower, $followed);
+  } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+      $stmt = $conn->prepare("DELETE FROM user_follow WHERE follower_id=? AND followed_id=?");
+      $stmt->bind_param("ii", $follower, $followed);
+  }
+  
+  $stmt->execute();
+  echo json_encode(['affected_rows' => $stmt->affected_rows]);
+}
+
 if ($_GET['action'] == 'getpost') {
   $sql = "SELECT 
   p.post_id,

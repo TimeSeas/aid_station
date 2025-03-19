@@ -9,7 +9,7 @@ header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 $data = json_decode(file_get_contents('php://input'), true);
-
+$role = isset($data['role']) ? (int)$data['role'] : 0;
 // 参数验证
 $phone = $data['phone'] ?? '';
 $username = $data['username'] ?? '';
@@ -19,7 +19,10 @@ if (empty($phone) || empty($username) || empty($password)) {
     echo json_encode(['code' => 400, 'msg' => '参数不完整']);
     exit;
 }
-
+if ($role < 0 || $role > 1) {
+  echo json_encode(['code' => 400, 'msg' => '角色参数非法']);
+  exit;
+}
 // 数据库配置
 $servername = "118.178.92.183";
 $db_username = "zlx_user";
@@ -52,7 +55,9 @@ try {
     // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // 插入数据（修正占位符）
-    $stmt = $conn->prepare("INSERT INTO `user` (phone, username, password_hash) VALUES (:phone, :username, :password_hash)");
+    $stmt = $conn->prepare("INSERT INTO `user` (phone, username, password_hash, role) 
+    VALUES (:phone, :username, :password_hash, :role)");
+$stmt->bindParam(':role', $role, PDO::PARAM_INT);
     $stmt->bindParam(':phone', $phone);
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':password_hash', $password);

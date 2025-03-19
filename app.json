@@ -3,7 +3,7 @@
     "pages/mypage/mypage",
     "pages/index/index",
     "pages/logs/logs",
-    
+    "pages/publish/pet-upload/index",
     "pages/publish/dynamic/index",
     "pages/publish/help/index",
     "pages/home/post/post",

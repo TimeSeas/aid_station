@@ -51,3 +51,19 @@
   font-size: 36rpx;
   letter-spacing: 4rpx;  /* 文字间距优化[4](@ref) */
 }
+.role-selector {
+  margin-top: 20rpx;
+  padding: 15rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+}
+
+.radio-item {
+  margin-right: 40rpx;
+  display: inline-flex;
+  align-items: center;
+}
+
+radio {
+  margin-right: 10rpx;
+}
