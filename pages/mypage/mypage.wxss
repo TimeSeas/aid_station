@@ -1,6 +1,16 @@
 /* page{
   background-color: var(--theme);
 } */
+.avatar-wrapper {
+  background: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.avatar-wrapper::after {
+  border: none;
+}
 .view {
   height: 50px;
   width: 50px;
@@ -43,15 +53,10 @@ font-size: large;
 font-weight: bold;
 margin-top: 10px;
 }
-.bar1 .hidden-button {
-  z-index: 0; /* 按钮层级更低 */
-  background-color: transparent;   /*按钮透明*/  
-  border:none;				/*设置按钮边框*/
-  color: white;
-  border-radius: 50%;
-  position: absolute; 
-  margin-left: 50px;
-  
+ .hidden-button {
+  z-index: 9999; /* 确保按钮在最上层 */
+  background-color:orange; 
+   color: white;
 }
 
 .bar1 .user .sub {
