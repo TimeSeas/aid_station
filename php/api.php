@@ -13,12 +13,19 @@ if ($conn->connect_error) {
 // 简化后的PHP接口（开发环境版）
 if ($_GET['action'] == 'wechatLogin') {
   $data = json_decode(file_get_contents('php://input'), true);
-  
-  // 开发环境跳过严格校验
-  $wechatData = [
-    'openid' => 'dev_'.md5($data['code']), // 开发环境模拟openid
-    'session_key' => 'dev_session'
-  ];
+ // 生产环境请求微信接口
+ $wechatApi = "https://api.weixin.qq.com/sns/jscode2session?appid=wxb385822ae551434a&secret=a1e74ec5db33fd286b4e1ac75fa879eb&js_code={$data['code']}&grant_type=authorization_code";
+ $response = file_get_contents($wechatApi);
+ $wechatData = json_decode($response, true);
+
+ // 错误处理
+ if(isset($wechatData['errcode'])){
+     die(json_encode(['error' => '微信接口错误: '.$wechatData['errmsg']]));
+ }
+ 
+ // 使用微信返回的真实openid
+ $openid = $wechatData['openid'];
+ $sessionKey = $wechatData['session_key'];
 
   // 简化数据库操作
   $user = $conn->query("SELECT * FROM user WHERE openid = '{$wechatData['openid']}'")->fetch_assoc();
@@ -124,7 +131,7 @@ if ($_GET['action'] == 'getpost') {
   p.images,
   p.like_count,
   p.created_at AS post_time,
-  u.username,
+  u.nickname,
   u.avatar
 FROM 
   post p

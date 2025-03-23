@@ -2,7 +2,7 @@
 App({
     //全局数据，其他页面可通过getApp().globalData获取数据
     globalData: {
-      token: null,
+    isAdmin: false,
     userId: null
     },
   onLaunch() {

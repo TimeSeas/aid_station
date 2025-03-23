@@ -51,16 +51,9 @@ Component({
    */
   methods: {
     async checkAdminStatus() {
-      const userId = getApp().globalData.userId;
-
-// 获取基础信息
-if(userId)
-wx.request({
-    url: `http://118.178.92.183/api.php?action=getUsers&id=${userId}`,
-    success: (res) => {
-      this.setData({ isAdmin: res.data.role === 1 })
-    }
-});
+      this.setData({
+         isAdmin: getApp().globalData.isAdmin
+         })
     },
 
     // 新增上传事件
