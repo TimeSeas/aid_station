@@ -36,7 +36,7 @@ Page({
         getApp().globalData.userId = authData.userId;
         this.setData({ hasUserInfo: true });
         // 静默更新用户数据
-        console.log('更新用户数据成功')
+        console.log('准备进入自动更新用户数据')
         await this.loadUserData();
     } catch (e) {
       console.error('自动登录失败', e);
@@ -62,60 +62,33 @@ Page({
   // 处理登录流程
   async processLogin(userInfo) {
     try {
-      console.log('[1/4] 开始登录流程')
-    const { code } = await wx.login()
-    console.log('[2/4] 获取 code 成功:', code) // 确保 code 存在
-    console.log('[3/4] 调用登录接口: 发送 code 和用户信息')
-    getApp().globalData._userIdPromise = new Promise(resolve => {
-      wx.request({
-      url: 'http://118.178.92.183/api.php?action=wechatLogin',
-      method: 'POST',
-      header: {'Content-Type': 'application/json'},
-      data: {
-        code: code, // 从wx.login获取
-        nickname: userInfo.nickName,
-        avatarUrl: userInfo.avatarUrl
-      },
-      success: (res) => {
-        if (res.statusCode === 200) {
-          console.log('[4/4] 登录接口响应:', res) // 检查响应结构
-              // 更新全局状态
-      getApp().globalData.userId = res.data.userId;
-      if(res.data.user_type === 1){
-        getApp().globalData.isAdmin=true;//更新管理员身份
-      }
+      const { code } = await wx.login();
       
-      // console.log( res.data.userId)
-      this.setData({
-        hasUserInfo: true,
-        userInfo: {
-          avatarUrl: userInfo.avatarUrl,
-          nickname: userInfo.nickName
-        }
-      }) 
-      // 保存关键数据到缓存（有效期建议7天）
-  wx.setStorageSync('authData', {
-    userId: res.data.userId,
-    lastLogin: Date.now(),
-  });        
-      // 保存用户基本信息到缓存
-      wx.setStorageSync('userProfile', {
-        avatarUrl: userInfo.avatarUrl,
-        nickname: userInfo.nickName
+      // 将请求包装成Promise
+      const loginResult = await new Promise((resolve, reject) => {
+        wx.request({
+          url: 'http://118.178.92.183/api.php?action=wechatLogin',
+          method: 'POST',
+          data: { code, nickname: userInfo.nickName, avatarUrl: userInfo.avatarUrl },
+          success: (res) => res.statusCode === 200 ? resolve(res) : reject(res),
+          fail: reject
+        });
       });
-      console.log('缓存成功')
-        } else {
-          wx.showToast({title: '登录失败:' + res.data.msg});
-        }
-      },
-      fail: (err) => console.error('网络错误:', err)
-    })
-  });
-    // 加载用户数据
-    await this.loadUserData();
+  
+      // 同步更新全局状态
+      getApp().globalData.userId = loginResult.data.userId;
+      
+      // 保存数据到缓存
+      wx.setStorageSync('authData', {
+        userId: loginResult.data.userId,
+        lastLogin: Date.now()
+      });
+  
+      // 等待数据加载
+      await this.loadUserData();
     } catch (error) {
-      console.error('完整错误信息:', error) // 输出完整错误对象
-      wx.showToast({ title: '登录失败', icon: 'none' })
+      console.error('登录失败:', error);
+      wx.showToast({ title: '登录失败', icon: 'none' });
     }
   },
 
@@ -134,7 +107,7 @@ Page({
   // 加载用户数据
   loadUserData: async function() {
     try {
-      console.log('进入加载用户数据')
+      console.log('正在加载用户数据')
       const userId = getApp().globalData.userId;
       if (!userId) throw new Error('未获取用户ID');
         wx.request({
@@ -143,6 +116,7 @@ Page({
           data: {id: getApp().globalData.userId},
           success: (res) => {
             this.setData({
+              hasUserInfo:true,
               userInfo: {
                 avatarUrl: res.data.avatar,
                 nickname: res.data.nickname
