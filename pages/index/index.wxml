@@ -35,7 +35,7 @@
     <swiper-item>
       <scroll-view scroll-y class="content-scroll">
         <!-- 广场内容 -->
-        <view class="content-item ">最新待领养宠物信息</view>
+        <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view>
         <view class="content-item">紧急救助需求</view>
         <view class="content-item">志愿者招募</view>
       </scroll-view>

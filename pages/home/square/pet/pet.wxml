@@ -1,0 +1,38 @@
+<!-- 基于网页1的小程序列表结构优化 -->
+<view class="container">
+  <scroll-view 
+    scroll-y 
+    class="scroll-view" 
+    bindscrolltolower="onReachBottom"
+  >
+    <view class="pet-list">
+      <block wx:for="{{petList}}" wx:key="pet_id">
+        <navigator 
+          url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}" 
+          class="pet-item"
+        >
+          <image 
+            src="{{item.cover || '/images/default-pet.png'}}" 
+            mode="aspectFill" 
+            class="pet-cover"
+            lazy-load="true"
+          />
+          <view class="info-box">
+            <view class="title-line">
+              <text class="name">{{item.name}}</text>
+              <view class="status {{item.is_adopted ? 'adopted' : ''}}">
+                {{item.is_adopted ? '已领养' : '待领养'}}
+              </view>
+            </view>
+            <view class="meta-line">
+              <text class="species">{{item.species}}</text>
+              <text class="age">{{item.age}}月</text>
+            </view>
+          </view>
+        </navigator>
+      </block>
+      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
+      <view wx:else class="no-more">没有更多了~</view>
+    </view>
+  </scroll-view>
+</view>

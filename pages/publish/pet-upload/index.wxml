@@ -29,7 +29,8 @@
 
     <view class="form-item">
       <text class="label">健康状况</text>
-      <textarea name="health" placeholder="描述健康情况（如疫苗接种、绝育等）" auto-height />
+     <!-- 修正字段命名与数据库一致 -->
+<textarea name="health_status" placeholder="描述健康情况（如疫苗接种、绝育等）" auto-height />
     </view>
 
     <view class="upload-box">

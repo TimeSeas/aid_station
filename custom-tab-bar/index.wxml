@@ -9,7 +9,7 @@
   <cover-view class="content">
     <cover-view class="list">
 
-      <cover-view class="btn" wx:if="{{isAdmin}}" bindtap="onUploadPet">  <!-- 条件渲染 -->
+      <cover-view class="btn" bindtap="onUploadPet">  <!-- 条件渲染 -->
         <cover-view class="ico2">
           <cover-image src="/images/icon/business-active.png" />
         </cover-view>

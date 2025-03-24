@@ -10,120 +10,124 @@ Page({
       { name: '母', value: 2 },
       { name: '未知', value: 0 }
     ],
-    tempImages: []
+    tempImages: [],
+    isSubmitting: false
   },
 
   onLoad() {
-    this.checkAdminPermission()
+    // this.checkAdminPermission()
   },
 
-  // 权限验证
-  checkAdminPermission() {
-    if (!app.globalData.userInfo || app.globalData.userInfo.role !== 1) {
-      wx.redirectTo({ url: '/pages/mypage/mypage' })
+  // checkAdminPermission() {
+  //   if (!app.globalData.userInfo || app.globalData.userInfo.role !== 1) {
+  //     wx.redirectTo({ url: '/pages/mypage/mypage' })
+  //   }
+  // },
+  speciesChange(e) {
+    this.setData({
+      speciesIndex: e.detail.value
+    })
+    // console.log('已选择品种:', this.data.speciesList[e.detail.value])
+  },
+  chooseImage() {
+    if (this.data.tempImages.length >= 6) {
+      wx.showToast({ title: '最多上传6张图片', icon: 'none' })
+      return
     }
+    wx.chooseMedia({
+      count: 6 - this.data.tempImages.length,
+      sizeType: ['compressed'],
+      success: res => {
+        const newPaths = res.tempFiles.map(file => file.tempFilePath)
+        this.setData({ 
+          tempImages: [...this.data.tempImages, ...newPaths]
+        })
+      },
+      fail: err => {
+        console.error('选择图片失败:', err)
+      }
+    })
   },
 
-  // 图片选择
-// 图片选择（关键修复）
-chooseImage() {
-  wx.chooseMedia({
-    count: 6 - this.data.tempImages.length,
-    sizeType: ['compressed'],
-    success: res => {
-      // 正确获取路径方式
-      const newPaths = res.tempFiles.map(file => file.tempFilePath)
-      this.setData({ 
-        tempImages: [...this.data.tempImages, ...newPaths]
-      })
-      console.log('当前已选图片:', this.data.tempImages) // 调试日志
-    },
-    fail: err => {
-      console.error('选择图片失败:', err)
+  validateForm(formData = {}) { // 添加默认值
+    if (!formData.name?.trim()) {
+      wx.showToast({ title: '请填写名称', icon: 'none' })
+      return false
     }
-  })
-},
-
-  // 表单验证
-  validateForm(formData) {
-    // // 1. 增加空值兜底
-    // const name = (formData.name || "").trim();
-    // if (!name) {
-    //   wx.showToast({ title: '请填写名称', icon: 'none' });
-    //   return false;
-    // }
-  
-    // 2. 调试输出表单数据
-    console.log('[表单数据]', JSON.stringify(formData));
-  
-    // 3. 确保图片路径有效性
-    if (this.data.tempImages.some(path => !path.startsWith('http'))) {
-      wx.showToast({ title: '存在无效的本地图片路径', icon: 'none' });
+     // 检查是否有图片
+     if (this.data.tempImages.length === 0) {
+      wx.showToast({ title: '请至少上传一张图片', icon: 'none' });
       return false;
     }
-  
-    return true;
+    return true
   },
 
-  // 图片上传
-  // 修改后的图片上传逻辑
-async uploadImages() {
-  try {
-    const uploadTasks = this.data.tempImages.map(path => {
-      return new Promise((resolve, reject) => {
-        wx.uploadFile({
-          url: 'http://118.178.92.183/upload.php',
-          filePath: path,
-          name: 'image',
-          success: (res) => resolve(res),
-          fail: (err) => reject(err)
+  async uploadImages() {
+    try {
+      const uploadTasks = this.data.tempImages.map(path => 
+        new Promise((resolve, reject) => {
+          wx.uploadFile({
+            url: 'http://118.178.92.183/upload.php',
+            filePath: path,
+            name: 'image',
+            success: (res) => {
+              console.log('上传响应:', res.data); // 打印原始响应
+              const response = JSON.parse(res.data);
+              resolve(response.url); 
+            },
+            fail: (err) => {
+              console.error('上传失败详情:', err); 
+              reject(err)
+            }
+          })
         })
-      }).catch(err => {
-        console.error(`文件 ${path} 上传失败:`, err);
-        return null; // 允许其他文件继续上传
-      });
-    });
+      )
 
-    const results = await Promise.all(uploadTasks);
+      const results = await Promise.all(uploadTasks)
+      const validPaths = results.filter(Boolean)
+      if (validPaths.length === 0) throw new Error('所有图片上传失败')
+      return validPaths
     } catch (error) {
-      wx.showToast({ title: error.message, icon: 'none' });
-      throw error;
+      wx.showToast({ title: error.message, icon: 'none' })
+      throw error
     }
   },
 
-  // 表单提交
   formSubmit(e) {
-    const formData = e.detail.value
-    if (!this.validateForm(formData)) return
+   console.log('[表单数据]', e.detail.value); // 检查实际收到的数据
+    if (this.data.isSubmitting) return;
+    this.setData({ isSubmitting: true });
+    
+    // 添加空对象保护
+    const formData = e.detail.value || {}; 
+    
+    if (!this.validateForm(formData)) {
+      this.setData({ isSubmitting: false });
+      return;
+    }
 
     wx.showLoading({ title: '提交中...' })
-    
+
     this.uploadImages()
       .then(photoPaths => {
         this.submitPetInfo({
           ...formData,
           species: this.data.speciesList[this.data.speciesIndex],
-          photos: photoPaths.join(','),
+          photos: photoPaths,
           created_by: app.globalData.userId
         })
       })
-      .catch(err => {
-        wx.hideLoading()
-        console.error('提交失败:', err)
-      })
-      .finally(() => {
-        wx.hideLoading(); // 确保始终执行
-      });
+      .catch(() => wx.hideLoading())
+      .finally(() => this.setData({ isSubmitting: false }))
   },
 
-  // 提交宠物信息
   submitPetInfo(petData) {
     wx.request({
       url: 'http://118.178.92.183/pets.php',
       method: 'POST',
       header: {
-        // 'Authorization': `Bearer ${wx.getStorageSync('token')}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${wx.getStorageSync('token')}`
       },
       data: petData,
       success: res => {
