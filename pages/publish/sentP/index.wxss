@@ -1,0 +1,29 @@
+.container {
+  padding: 40rpx;
+}
+
+.form-group {
+  margin-bottom: 40rpx;
+}
+
+.title-input {
+  height: 80rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid #eee;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.content-input {
+  min-height: 300rpx;
+  padding: 20rpx;
+  border: 1rpx solid #eee;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.submit-btn {
+  margin-top: 40rpx;
+  background-color: #07c160;
+  color: white;
+}

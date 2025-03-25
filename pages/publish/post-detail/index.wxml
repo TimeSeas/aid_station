@@ -1,0 +1,42 @@
+<view class="container">
+  <!-- 帖子内容 -->
+  <view class="post-content">
+    <view class="title">{{post.title}}</view>
+    <view class="author">
+      <image class="avatar" src="{{post.avatar}}"></image>
+      <text>{{post.nickname}}</text>
+    </view>
+    <view class="content">{{post.content}}</view>
+    <view class="meta">
+      <text>浏览：{{post.viewCount}}</text>
+      <text>评论：{{post.commentCount}}</text>
+    </view>
+  </view>
+
+  <!-- 评论列表 -->
+  <view class="comment-list">
+    <block wx:for="{{comments}}" wx:key="_id">
+      <view class="comment-item">
+        <image class="avatar" src="{{item.avatar}}"></image>
+        <view class="content">
+          <text class="nickname">{{item.nickname}}</text>
+          <text>{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 评论输入框 -->
+  <view class="comment-input">
+    <input 
+      class="input" 
+      placeholder="输入评论..." 
+      bindinput="onCommentInput"
+      value="{{newComment}}"
+    />
+    <button 
+      class="send-btn" 
+      bindtap="submitComment"
+    >发送</button>
+  </view>
+</view>

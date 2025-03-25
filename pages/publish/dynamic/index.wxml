@@ -1,10 +1,24 @@
-<!-- pages/publish/publish.wxml -->
 <view class="container">
-  <textarea 
-    class="content-input" 
-    placeholder="请输入动态内容" 
-    bindinput="onContentInput"
-    value="{{content}}"
-  ></textarea>
-  <button class="publish-btn" type="primary" bindtap="onPublish">发布</button>
+  <!-- 发帖按钮 -->
+  <button 
+    class="publish-btn" 
+    bindtap="toPublish"
+  >+</button>
+
+  <!-- 帖子列表 -->
+  <view class="post-list">
+    <block wx:for="{{posts}}" wx:key="_id">
+      <view 
+        class="post-item" 
+        bindtap="toPostDetail" 
+        data-id="{{item._id}}"
+      >
+        <view class="title">{{item.title}}</view>
+        <view class="meta">
+          <text>作者：{{item.nickname}}</text>
+          <text>评论：{{item.commentCount}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
 </view>

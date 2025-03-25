@@ -5,7 +5,9 @@
     "pages/logs/logs",
     
     "pages/publish/dynamic/index",
+    "pages/publish/sentP/index",
     "pages/publish/help/index",
+    "pages/publish/post-detail/index",
     "pages/home/post/post",
     "pages/knowledge/index",
     "pages/knowledge/detail",

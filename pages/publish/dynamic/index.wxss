@@ -1,16 +1,34 @@
-/* pages/publish/publish.wxss */
 .container {
   padding: 20rpx;
 }
 
-.content-input {
-  width: 100%;
-  height: 300rpx;
-  padding: 20rpx;
-  border: 1rpx solid #ccc;
-  margin-bottom: 30rpx;
+.publish-btn {
+  position: fixed;
+  bottom: 40rpx;
+  right: 40rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #07c160;
+  color: white;
+  font-size: 60rpx;
+  line-height: 100rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.1);
 }
 
-.publish-btn {
-  width: 200rpx;
+.post-item {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+}
+
+.meta {
+  color: #666;
+  font-size: 26rpx;
 }

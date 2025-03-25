@@ -1,6 +1,4 @@
 {
-  "navigationBarTitleText": "发布动态",
-  "usingComponents": {},
-  "navigationStyle": "default",
-  "disableScroll": true
+  "navigationBarTitleText": "论坛",
+  "usingComponents": {}
 }

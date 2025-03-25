@@ -1,43 +1,39 @@
-// pages/publish/publish.js
 Page({
   data: {
-    content: '',
-    userId: getApp().globalData.userId // 假设已登录，实际需从全局或缓存获取
+    posts: [],          // 帖子列表数据
+    isLoading: false    // 加载状态
   },
 
-  onContentInput(e) {
-    this.setData({ content: e.detail.value });
+  onLoad() {
+    this.getPostList()
   },
 
-  onPublish() {
-    const { content, userId } = this.data;
+  // 获取帖子列表（带加载状态）
+  async getPostList() {
+    if (this.data.isLoading) return
+    this.setData({ isLoading: true })
     
-    if (!content.trim()) {
-      wx.showToast({ title: '内容不能为空', icon: 'none' });
-      return;
-    }
+    const db = wx.cloud.database()
+    const res = await db.collection('posts')
+      .orderBy('createTime', 'desc')
+      .get()
+    
+    this.setData({ 
+      posts: res.data,
+      isLoading: false 
+    })
+  },
 
-    wx.request({
-      url: 'http://118.178.92.183/publish_post.php',
-      method: 'POST',
-      data: {
-        user_id: userId,
-        content: content
-      },
-      success: (res) => {
-        console.log(res)
-        if (res.data.code === 200) {
+  // 跳转发帖页
+  toPublish() {
+    wx.navigateTo({ url: '/pages/publish/publish' })
+  },
 
-          wx.showToast({ title: '发布成功' });
-          setTimeout(() => wx.navigateBack(), 1500);
-        } else {
-          wx.showToast({ title: res.data.msg || '发布失败', icon: 'none' });
-          console.log(res);
-        }
-      },
-      fail: () => {
-        wx.showToast({ title: '网络错误', icon: 'none' });
-      }
-    });
+  // 跳转帖子详情页
+  toPostDetail(e) {
+    const postId = e.currentTarget.dataset.id
+    wx.navigateTo({ 
+      url: `/pages/post-detail/post-detail?id=${postId}` 
+    })
   }
-});
+})

@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="form-group">
+    <input 
+      class="title-input" 
+      placeholder="请输入标题" 
+      bindinput="onTitleInput"
+      value="{{title}}"
+    />
+  </view>
+  
+  <view class="form-group">
+    <textarea 
+      class="content-input" 
+      placeholder="请输入内容" 
+      bindinput="onContentInput"
+      value="{{content}}"
+    />
+  </view>
+
+  <button 
+    class="submit-btn" 
+    bindtap="submitPost"
+  >发布</button>
+</view>
