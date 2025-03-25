@@ -1,1 +1,97 @@
 /* pages/favorites/index.wxss */
+.fav-list {
+  padding: 30rpx;
+}
+
+.container {
+  padding: 20rpx; /* 确保左右两侧的间距一致 */
+  background: #fff;
+  width:100%;
+  height: 100%;
+}
+
+.search-box {
+  background: #f5f5f5;
+  border-radius: 40rpx;
+  padding: 0 30rpx;
+  margin-bottom: 15px;
+  margin-right: 20px;
+}
+
+.search-input {
+  flex: 1; /* 占据剩余空间 */
+  height: 80rpx; /* 输入框高度 */
+  font-size: 28rpx; /* 字体大小 */
+  padding-right: 60rpx; /* 为放大镜图标留出空间 */
+}
+
+.search-icon {
+  position: relative; /* 图标定位 */
+  width: 40rpx; /* 图标宽度 */
+  height: 40rpx; /* 图标高度 */
+  margin-left: -60rpx; /* 向左偏移，覆盖输入框右侧 */
+}
+
+.article-card {
+  display: flex; /* 使用弹性布局 */
+  align-items: center; /* 垂直居中对齐 */
+  justify-content:  space-around;
+  margin-right: 40px; /* 卡片之间的间距 */
+  margin-bottom: 20px;
+  background: white; /* 卡片背景色 */
+  border-radius: 16rpx; /* 添加圆角设计 */
+  height: 100px;
+  overflow: hidden; /* 防止内容溢出 */
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1); /* 添加阴影效果，增强立体感 */
+  padding: 10px; /* 卡片内部间距 */
+  
+}
+
+/* 左边：封面图片 */
+.cover {
+  width: 200rpx; /* 正方形图片宽度 */
+  height: 200rpx; /* 正方形图片高度 */
+  border-radius: 12rpx; /* 图片圆角设计 */
+  margin-right: 20rpx; /* 图片与文字之间的间距 */
+}
+
+/* 中间：标题和摘要 */
+.info {
+  flex: 1; /* 占据中间区域 */
+  display: flex;
+  flex-direction: column; /* 子元素垂直排列 */
+}
+
+.info .title {
+  font-family: '华文细黑', Arial, sans-serif;
+  font-size: 38rpx; /* 标题字体大小 */
+  font-weight: bold; /* 加粗字体 */
+  margin-bottom: 10rpx; /* 标题与摘要之间的间距 */
+}
+
+.info .summary {
+  font-size: 28rpx; /* 摘要字体大小 */
+  text-indent: 1.5em;
+  color: #666; /* 摘要颜色 */
+  line-height: 1.6; /* 行高 */
+}
+
+/* 右边：星星按钮 */
+.star-btn {
+  font-size: 80rpx; /* 设置星星大小为80rpx（新增） */
+  color: #ccc; /* 默认灰色 */
+  margin-left: 20rpx; /* 星星与中间区域的间距 */
+  text-align: center; /* 文字居中 */
+  width: 80rpx; /* 固定宽度，防止溢出（新增） */
+  height: 80rpx; /* 固定高度，防止溢出（新增） */
+  line-height: 80rpx; /* 垂直居中对齐星星图标（新增） */
+}
+
+.star-btn.active {
+  color: #f7b500; /* 黄色表示已收藏 */
+}
+
+.icon {
+  width: 100%; /* 图标宽度占满父容器 */
+  height: 100%; /* 图标高度占满父容器 */
+}

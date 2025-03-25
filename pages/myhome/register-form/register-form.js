@@ -2,16 +2,19 @@ Page({
   data: { 
     phone: '', 
     username: '', 
-    password: '' 
+    password: '' ,
+    role: 0 // 默认普通用户[6](@ref)
   },
   
   // 输入处理
   onPhoneInput(e) { this.setData({ phone: e.detail.value }) },
   onUsernameInput(e) { this.setData({ username: e.detail.value }) },
   onPasswordInput(e) { this.setData({ password: e.detail.value }) },
-
+  onRoleChange(e) {
+    this.setData({ role: parseInt(e.detail.value) })
+  },
   handleRegister() {
-    const { phone, username, password } = this.data;
+    const { phone, username, password, role } = this.data;
     
     // 客户端基本校验（与发布动态参数校验逻辑一致[1](@ref)）
     if (!phone || !username || !password) {
@@ -28,7 +31,8 @@ Page({
       data: { 
         phone: phone,
         username: username,
-        password: password
+        password: password,
+        role: role // 新增角色参数[3](@ref)
       },
       success: (res) => {
         console.log(res);

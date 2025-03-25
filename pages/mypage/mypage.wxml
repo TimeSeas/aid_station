@@ -3,38 +3,47 @@
   <view class="a">
     <view class="view" />
   </view>
-  <view class="container">
+     <!-- 用户信息区域  open-type="chooseAvatar"
+        bindchooseavatar="onChooseAvatar"-->
+
     <view class="bar1">
-      <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" wx:if="{{isLogin==false}}" style="position: absolute; left: 45rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
-        微信登录
-</button>
-<button class="hidden-button"bind:tap="navigateTologin" wx:if="{{isLogin==false}}" style="position: absolute; left: 306rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
+
+      <block wx:if="{{!hasUserInfo}}">
+      <button class="hidden-button"
+      wx:if="{{canIUseGetUserProfile}}" bindtap="handleLogin" style="position: relative; left: 2rpx; top: 0rpx">微信一键登录</button>
+      <!-- <image class="avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image> -->
+    </block>
+<!-- <button class="hidden-button"bind:tap="navigateTologin" wx:if="{{isLogin==false}}" style="position: absolute; left: 306rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
         手机号登录
-</button>
-      <image class="avatar" src="{{avatarUrl}}"></image>
+</button> -->
+<!-- 头像区域 -->
+
+<block wx:else>
       <view class="user">
-        
-        <view class="name"wx:if="{{isLogin}}">{{username}}</view>
-        <view class="sub" wx:if="{{isLogin}}">关爱生命，人人有责</view>
+        <image class="avatar" src="{{userInfo.avatarUrl}}" style="position: relative; left: -43rpx; top: 96rpx"></image>
+        <view class="name" style="width: 258rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -34rpx">{{userInfo.nickname}}</view>
+        <view class="sub" style="width: 235rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 147rpx; top: -49rpx">关爱生命，人人有责</view>
       </view>
+</block>
+
       <view class="card"><iconfont type="saoyisao" size="25px" color="white" /></view>
     </view>
     <view class="bar2">
       <view class="item">
-        <view class="num">{{userfollower}}</view>
+        <view class="num">{{stats.followers}}</view>
         粉丝
       </view>
       <view class="item">
-        <view class="num">{{userfeed}}</view>
+        <view class="num">{{stats.posts}}</view>
         动态
       </view>
       <view class="item">
-        <view class="num">{{userfollow}}</view>
+        <view class="num">{{stats.following}}</view>
         关注
       </view>
       <!-- 在mypage.wxml的列表区域添加 -->
     </view>
-    <view class="label">我的订单</view>
+    <!-- <view class="label">我的订单</view>
     <view class="bar3">
       <view class="item">
         <image class="ico" src="/images/icon/2.png"></image>
@@ -52,7 +61,7 @@
         <image class="ico" src="/images/icon/4.png"></image>
         <view>待评价</view>
       </view>
-    </view>
+    </view> -->
     <view class="label">我的爱宠</view>
     <view class="bar4">
       <view class="item"></view>
@@ -63,6 +72,5 @@
       <view class="item"><iconfont type="comment" class="ico" size="20px" />我的评论</view>
       <view class="item"><iconfont type="share" class="ico" size="20px" />我的分享</view>
     </view>
-  </view>
 </scroll-view>
 <view class="page-tabbar page-ipx-safe-area"></view>

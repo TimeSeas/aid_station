@@ -2,13 +2,17 @@
 App({
     //全局数据，其他页面可通过getApp().globalData获取数据
     globalData: {
-      userId: null,// 登录成功后更新该值
+    isAdmin: false,
+    userId: null
     },
   onLaunch() {
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+  },
+  login() {
+ // 前端调用示例（配合微信API）
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

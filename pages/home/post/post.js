@@ -7,7 +7,7 @@ Page({
       url: 'http://118.178.92.183/api.php?action=getpost',
       method: 'GET',
       success: (res) => {
-        console.log(res.data); // 控制台打印数据
+        console.log('获取动态信息成功',res); // 控制台打印数据
         this.setData({ users: res.data });
       },
       fail: (err) => {
