@@ -54,6 +54,16 @@
           <!-- 文章摘要 -->
           <text class="summary">{{item.summary}}</text>
         </view>
+        <!-- <button 
+          class="fav-btn" 
+          bindtap="toggleFavorite" 
+          data-id="{{item.id}}"
+        >{{wx.getStorageSync(`fav_${item.id}`) ? '已收藏' : '收藏'}}</button> -->
+        <!-- <button 
+          class="fav-btn" 
+          bindtap="toggleFavorite" 
+          data-id="{{item.id}}"
+        >{{wx.getStorageSync(`fav_${item.id}`) ? '已收藏' : '收藏'}}</button> -->
       </view>
     </block>
   </scroll-view>

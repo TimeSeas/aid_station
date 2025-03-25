@@ -1,0 +1,60 @@
+<!--pages/knowledge/index.wxml-->
+<!-- pages/knowledge/index.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <!-- 
+      搜索输入框
+      - placeholder: 输入框默认提示文字
+      - bindinput: 输入时触发搜索过滤（需在JS中实现onSearchInput方法）
+      - class: 关联样式类search-input（控制输入框样式）
+    -->
+  <view class="search-box">
+    <input 
+      placeholder="搜索流浪狗知识" 
+      bindinput="onSearchInput"
+      class="search-input"
+    />
+  </view>
+
+  <!-- 知识分类 -->
+  <scroll-view scroll-x class="category-tabs">
+  <!-- 
+      分类标签循环渲染
+      - wx:for: 遍历categories数组生成分类标签
+      - wx:key: 唯一标识符（建议使用id）
+      - class: 动态绑定样式（active类控制选中状态）
+      - bindtap: 点击事件处理（需实现changeCategory方法）
+      - data-id: 传递分类ID参数
+    -->
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="id"
+      class="tab-item {{activeCategory === item.id ? 'active' : ''}}"
+      bindtap="changeCategory"
+      data-id="{{item.id}}"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 文章列表 -->
+  <scroll-view scroll-y class="article-list">
+  <!-- 
+      文章列表循环渲染
+      - wx:for: 遍历filteredArticles（已过滤/分类的数据）
+      - wx:key: 唯一标识符（建议使用id）
+      - bindtap: 点击跳转详情页（需实现navigateToDetail方法）
+      - data-id: 传递文章ID参数
+    -->
+    <block wx:for="{{filteredArticles}}" wx:key="id">
+      <view class="article-card" bindtap="navigateToDetail" data-id="{{item.id}}">
+      <!-- 文章封面图 -->
+        <image class="cover" src="{{item.coverImage}}"/>
+        <view class="info">
+        <!-- 文章标题 -->
+          <text class="title">{{item.title}}</text>
+          <!-- 文章摘要 -->
+          <text class="summary">{{item.summary}}</text>
+        </view>
+      </view>
+    </block>
+  </scroll-view>
+</view>

@@ -32,5 +32,15 @@ Page({
     wx.navigateTo({
       url: "/pages/knowledge/index"  // 请确认实际页面路径
   });
-  }
+  },
+  onjiu(){
+    wx.navigateTo({
+      url: "/pages/knowledge/jiuzhu"  // 请确认实际页面路径
+  });
+},
+  onling(){
+    wx.navigateTo({
+      url: "/pages/knowledge/lingyang"  // 请确认实际页面路径
+  });
+}
 })
