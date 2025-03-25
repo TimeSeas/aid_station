@@ -1,0 +1,7 @@
+<!-- login.wxml -->
+<view class="container">
+  <view class="button-group">
+    <button class="btn-login" bindtap="navigateToMobileLogin">手机号登录</button>
+    <button class="btn-register" bindtap="navigateToRegister">新用户注册</button>
+  </view>
+</view>

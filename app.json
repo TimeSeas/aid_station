@@ -1,29 +1,47 @@
 {
   "pages": [
+    "pages/mypage/mypage",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/mypage/mypage"
+    "pages/publish/pet-upload/index",
+    "pages/publish/dynamic/index",
+    "pages/publish/help/index",
+    "pages/home/post/post",
+    "pages/knowledge/index",
+    "pages/knowledge/detail",
+    "pages/favorites/index",
+    "pages/myhome/login/login",
+    "pages/myhome/login-form/login-form",
+    "pages/myhome/register-form/register-form",
+    "pages/home/square/pet/pet",
+    "pages/home/square/pet_detaill/pet_detaill"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true,"backgroundTextStyle": "dark" ,
-    "navigationBarBackgroundColor": "#ffffff"
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#000000",
     "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "主页"
+        "text": "首页"
       },
       {
         "pagePath": "pages/mypage/mypage",
         "text": "我的"
       }
     ]
+  },
+  "usingComponents": {
+    "iconfont": "components/iconfont/iconfont",
+    "custom-tab-bar": "/custom-tab-bar/index"
   },
   "style": "v2",
   "componentFramework": "glass-easel",

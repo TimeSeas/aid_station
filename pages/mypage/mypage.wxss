@@ -1,130 +1,157 @@
-/* pages/mypage/mypage.wxss */
-/* 页面整体样式 */
-page {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  position: fixed;
-  background-color: #f0f0f0; /* 浅灰色背景 */
+/* page{
+  background-color: var(--theme);
+} */
+.avatar-wrapper {
+  background: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
 }
-/* 用户信息区域 */
-.user-header {
-  padding: 40rpx;
-  
-  display: flex;
-  align-items: center;
-  
+
+.avatar-wrapper::after {
+  border: none;
 }
-.hidden-button {
-  left: 39rpx; top: 39rpx;
-  z-index: 0; /* 按钮层级更低 */
-  background: transparent; /* 去除背景 */
-  border: none; /* 去除边框 */
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  margin-right: 30rpx;
-  position: absolute; 
+.view {
+  height: 50px;
+  width: 50px;
+  border-radius: 0 0 50% 50%;
+  background-color: var(--theme);
+  transform: scale(20);
 }
+
+.a {
+position: absolute;
+top: -300px;
+width: 100%;
+display: flex;
+justify-content: center;
+z-index: -1;
+}
+
+.bar1 {
+height: 110px;
+margin: 20px;
+display: flex;
+align-items: center;
+}
+
+.bar1 .avatar {
+height: 80px;
+width: 80px;
+border-radius: 50%;
+background-color: white;
+}
+
+.bar1 .user {
+color: white;
+margin-left: 15px;
+flex: 1;
+}
+
+.bar1 .user .name {
+font-size: large;
+font-weight: bold;
+margin-top: 10px;
+}
+ .hidden-button {
+  z-index: 9999; /* 确保按钮在最上层 */
+  background-color:orange; 
+   color: white;
+}
+
+.bar1 .user .sub {
+margin-top: 10px;
+color: rgba(255, 255, 255, 0.7);
+font-size: small;
+}
+
+.bar1 .card {
+padding-top: 10px;
+}
+
+.bar2 {
+display: flex;
+justify-content: space-around;
+align-items: center;
+margin: 20px;
+background-color: white;
+box-shadow: 0 5px 15px -10px rgba(128, 128, 128, 0.5);
+height: 100px;
+border-radius: 15px;
+}
+
+.bar2 .item {
+padding: 10px;
+font-size: small;
+color: #808080;
+text-align: center;
+}
+
+.bar2 .item .num {
+font-weight: bold;
+font-size: large;
+color: #333333;
+}
+
+.label {
+font-weight: bold;
+margin-left: 20px;
+padding-top: 10px;
+}
+
+.bar3 {
+display: flex;
+justify-content: space-around;
+align-items: center;
+margin: 15px 20px;
+background-color: white;
+box-shadow: 0 3px 20px -10px rgba(128, 128, 128, 0.5);
+height: 100px;
+border-radius: 15px;
+}
+
+.bar3 .item {
+padding: 10px;
+text-align: center;
+font-size: 15px;
+}
+
+.bar3 .item .ico {
+height: 30px;
+width: 30px;
+}
+
+.bar4 {
+margin: 15px 20px;
+display: grid;
+grid-template-columns: 1fr 1fr;
+column-gap: 15px;
+}
+
+.bar4 .item {
+height: 100px;
+background-color: rgb(220, 220, 220);
+border-radius: 15px;
+}
+
+.list {
+margin: 20px;
+}
+
+.list .item {
+padding: 15px 0;
+border-bottom: solid 1px rgba(220, 220, 220, 0.3);
+line-height: 20px;
+}
+
+.list .item .ico {
+margin-right: 15px;
+}
+
 .hidden-button2 {
   position: absolute;
   z-index: 0; /* 按钮层级更低 */
   background: transparent; /* 去除背景 */
   border: none; /* 去除边框 */
   width: 145rpx; height: 58rpx; display: block; box-sizing: border-box; position: absolute; left: 152rpx; top: 75rpx
-}
-.avatar {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 50%;
-  margin-right: 30rpx;
-  position: relative; left: -29rpx; top: 0rpx
-}
-
-.username {
-  font-size: 36rpx;
-  font-weight: bold;
-  color:black;
-  position: relative; left: -29rpx; top: 0rpx
-}
-
-/* 资产卡片 */
-.assets-card {
-  display: flex;
-  justify-content: space-around;
-  background: white;
-  margin: 20rpx;
-  padding: 30rpx 0;
-  border-radius: 12rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
-}
-
-.asset-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.asset-icon {
-  width: 60rpx;
-  height: 60rpx;
-  margin-bottom: 10rpx;
-}
-
-/* SVIP横幅 */
-.svip-banner {
-  background: linear-gradient(to right, #FF3B3B, #FF6A6A);
-  margin: 20rpx;
-  padding: 30rpx;
-  border-radius: 12rpx;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.upgrade-btn {
-  background: white;
-  color: #FF3B3B;
-  border-radius: 20rpx;
-  padding: 10rpx 30rpx;
-  font-size: 28rpx;
-}
-
-/* 功能网格 */
-.function-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: white;
-  margin: 20rpx;
-  padding: 30rpx 0;
-  border-radius: 12rpx;
-}
-
-.grid-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20rpx;
-}
-
-.grid-icon {
-  width: 80rpx;
-  height: 80rpx;
-  margin-bottom: 20rpx;
-}
-
-/* 快递列表 */
-.express-list {
-  background: white;
-  margin: 20rpx;
-  padding: 30rpx;
-  border-radius: 12rpx;
-}
-
-.express-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid #eee;
 }

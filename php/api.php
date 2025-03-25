@@ -1,0 +1,247 @@
+<?php
+header("Access-Control-Allow-Origin:*"); // 解决跨域问题:cite[1]:cite[5]
+header("Content-Type: application/json; charset=UTF-8");
+$host = "118.178.92.183"; // 阿里云服务器IP
+$user = "zlx_user";
+$password = "zlx_password";
+$dbname = "wxproject";
+
+$conn = new mysqli($host, $user, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+// 简化后的PHP接口（开发环境版）用户登录
+if ($_GET['action'] == 'wechatLogin') {
+  $data = json_decode(file_get_contents('php://input'), true);
+ // 生产环境请求微信接口
+ $wechatApi = "https://api.weixin.qq.com/sns/jscode2session?appid=wxb385822ae551434a&secret=a1e74ec5db33fd286b4e1ac75fa879eb&js_code={$data['code']}&grant_type=authorization_code";
+ $response = file_get_contents($wechatApi);
+ $wechatData = json_decode($response, true);
+ // 错误处理
+ if(isset($wechatData['errcode'])){
+     die(json_encode(['error' => '微信接口错误: '.$wechatData['errmsg']]));
+ }
+ // 使用微信返回的真实openid
+ $openid = $wechatData['openid'];
+ $sessionKey = $wechatData['session_key'];
+  // 简化数据库操作
+  $user = $conn->query("SELECT * FROM user WHERE openid = '{$wechatData['openid']}'")->fetch_assoc();
+  if (!$user) {
+    $conn->query("INSERT INTO user (openid, nickname, avatar) VALUES (
+      '{$wechatData['openid']}',
+      '{$data['nickname']}',
+      '{$data['avatarUrl']}'
+    )");
+    $userId = $conn->insert_id;
+  }
+  echo json_encode(['userId' => $userId ?? $user['user_id']]);
+  exit;
+}
+
+
+
+// 头像上传接口
+if ($_GET['action'] == 'uploadAvatar') {
+  $userId = $_POST['userId'];
+  
+  // 处理文件上传
+  $file = $_FILES['avatar'];
+  $targetDir = 'uploads/';
+  $fileName = uniqid().'.jpg';
+  move_uploaded_file($file['tmp_name'], $targetDir.$fileName);
+
+  // 更新数据库
+  $url = 'http://118.178.92.183/'.$targetDir.$fileName;
+  $updateSql = "UPDATE user SET avatar = ? WHERE user_id = ?";
+  $stmt = $conn->prepare($updateSql);
+  $stmt->bind_param("si", $url, $userId);
+  $stmt->execute();
+
+  echo json_encode(['url' => $url]);
+  exit;
+}
+
+
+
+
+// 更新头像接口
+if ($_GET['action'] == 'updateAvatar') {
+  $userId = (int)$_POST['userId'];
+  $avatarUrl = $_POST['avatarUrl'];
+  
+  $updateSql = "UPDATE user SET avatar = ? WHERE user_id = ?";
+  $stmt = $conn->prepare($updateSql);
+  $stmt->bind_param("si", $avatarUrl, $userId);
+  $stmt->execute();
+  
+  echo json_encode(['status' => 'success']);
+  exit;
+}
+
+
+
+
+// 查询用户信息
+if ($_GET['action'] == 'getUsers') {
+  $userId = $_GET['id']; // 获取前端传递的用户ID
+  $sql = "SELECT * FROM user WHERE user_id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $userId);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $data = $result->fetch_assoc(); // 直接获取单行数据
+  header('Content-Type: application/json');
+  echo json_encode($data);
+}
+
+
+
+
+//获取用户发布动态数量
+if ($_GET['action'] == 'getUserStats') {
+  $userId = $_GET['user_id'];
+  // 使用预处理防止SQL注入
+  $stmt = $conn->prepare("
+      SELECT 
+          (SELECT COUNT(*) FROM post WHERE user_id = ?) AS post_count,
+          (SELECT COUNT(*) FROM user_follow WHERE followed_id = ?) AS followers,
+          (SELECT COUNT(*) FROM user_follow WHERE follower_id = ?) AS following
+  ");
+  $stmt->bind_param("iii", $userId, $userId, $userId);
+  $stmt->execute();
+  
+  $result = $stmt->get_result();
+  echo json_encode($result->fetch_assoc());
+}
+
+
+
+
+// 关注/取关接口
+if ($_GET['action'] == 'handleFollow') {
+  $follower = $_POST['follower_id'];
+  $followed = $_POST['followed_id'];
+  
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $stmt = $conn->prepare("INSERT IGNORE INTO user_follow VALUES (NULL,?,?,NOW())");
+      $stmt->bind_param("ii", $follower, $followed);
+  } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+      $stmt = $conn->prepare("DELETE FROM user_follow WHERE follower_id=? AND followed_id=?");
+      $stmt->bind_param("ii", $follower, $followed);
+  }
+  
+  $stmt->execute();
+  echo json_encode(['affected_rows' => $stmt->affected_rows]);
+}
+
+
+
+
+//获取动态内容
+if ($_GET['action'] == 'getpost') {
+  $sql = "SELECT 
+  p.post_id,
+  p.content,
+  p.images,
+  p.like_count,
+  p.created_at AS post_time,
+  u.nickname,
+  u.avatar
+FROM 
+  post p
+JOIN 
+  user u ON p.user_id = u.user_id";
+  $result = $conn->query($sql);
+  $data = array();
+  while ($row = $result->fetch_assoc()) {
+      $data[] = $row;
+  }
+  echo json_encode($data);
+}
+
+
+// 获取宠物详细信息接口（含图片）
+if ($_GET['action'] == 'getPetDetail') {
+  $petId = $_GET['id'];
+  
+  try {
+      // 获取宠物基础信息
+      $sql = "SELECT p.*, 
+              GROUP_CONCAT(pi.image_url) AS images 
+              FROM pet p 
+              LEFT JOIN pet_image pi ON p.pet_id = pi.pet_id 
+              WHERE p.pet_id = ? 
+              GROUP BY p.pet_id";
+      
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("i", $petId);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      
+      if($result->num_rows > 0) {
+          $data = $result->fetch_assoc();
+          // 转换图片字段为数组
+          $data['images'] = $data['images'] ? explode(',', $data['images']) : [];
+          
+          // 转换领养状态
+          $data['is_adopted'] = (bool)$data['is_adopted'];
+          
+          http_response_code(200);
+          header('Content-Type: application/json');
+          echo json_encode([
+              'code' => 0,
+              'data' => $data
+          ]);
+      } else {
+          http_response_code(404);
+          echo json_encode(['code' => 404, 'message' => '宠物信息不存在']);
+      }
+  } catch(Exception $e) {
+      http_response_code(500);
+      echo json_encode(['code' => 500, 'message' => '服务器内部错误']);
+  }
+}
+
+
+ 
+// 获取宠物列表接口（带分页）
+if ($_GET['action'] == 'getPetList') {
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $pageSize = 10;
+  $offset = ($page - 1) * $pageSize;
+
+  try {
+      // 基础信息查询
+      $sql = "SELECT p.pet_id, p.name, p.species, p.age, 
+              (SELECT image_url FROM pet_image WHERE pet_id = p.pet_id LIMIT 1) AS cover
+              FROM pet p
+              WHERE p.is_adopted = 0 
+              ORDER BY p.created_at DESC
+              LIMIT ?, ?";
+      
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("ii", $offset, $pageSize);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      
+      $data = [];
+      while($row = $result->fetch_assoc()) {
+          $data[] = $row;
+      }
+
+      header('Content-Type: application/json');
+      echo json_encode([
+          'code' => 0,
+          'data' => $data,
+          'page' => $page
+      ]);
+  } catch(Exception $e) {
+      http_response_code(500);
+      echo json_encode(['code' => 500, 'message' => '服务器错误']);
+  }
+}
+
+
+
+$conn->close();
+?>

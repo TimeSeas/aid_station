@@ -1,0 +1,50 @@
+<!-- pages/admin/pet-upload/index.wxml -->
+<view class="container">
+  <form bindsubmit="formSubmit">
+    <view class="form-item">
+      <text class="label">宠物名称</text>
+      <input name="name" placeholder="请输入宠物名称" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">品种</text>
+      <picker name="species" range="{{speciesList}}" value="{{speciesIndex}}" bindchange="speciesChange">
+        <view class="picker">{{speciesList[speciesIndex] || '请选择品种'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">性别</text>
+      <radio-group name="gender" class="radio-group">
+        <label class="radio-item" wx:for="{{genderList}}">
+          <radio value="{{item.value}}" checked="{{item.checked}}" />{{item.name}}
+        </label>
+      </radio-group>
+    </view>
+
+    <view class="form-item">
+      <text class="label">年龄</text>
+      <input name="age" type="number" placeholder="请输入年龄（月）" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">健康状况</text>
+     <!-- 修正字段命名与数据库一致 -->
+<textarea name="health_status" placeholder="描述健康情况（如疫苗接种、绝育等）" auto-height />
+    </view>
+
+    <view class="upload-box">
+      <!-- <view class="upload-title"></view> -->
+      <view class="upload-list">
+        <block wx:for="{{tempImages}}" wx:key="index">
+          <image src="{{item}}" class="upload-img" mode="aspectFill" />
+        </block>
+        <view class="upload-btn" wx:if="{{tempImages.length < 6}}" bindtap="chooseImage">
+          <text>上传照片（最多6张）</text>
+        </view>
+      </view>
+    </view>
+
+    <button formType="submit" class="submit-btn" bind:tap="formSubmit">提交登记</button>
+  </form>
+</view>

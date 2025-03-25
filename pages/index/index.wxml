@@ -1,27 +1,64 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
-    </view>
+<!-- index.wxml -->
+<view class="container">
+  <!-- 轮播图区域 -->
+  <swiper class="swiper" autoplay interval="3000" indicator-dots indicator-color="#eee" indicator-active-color="#ff9000">
+    <swiper-item wx:for="{{swiperList}}" wx:key="index">
+      <image src="{{item.image}}" mode="aspectFill" class="swiper-image"/>
+    </swiper-item>
+  </swiper>
+
+  <!-- 导航选项卡 -->
+  <view class="nav-tabs">
+    <scroll-view scroll-x class="scroll-x">
+      <view class="tabs-container">
+        <block wx:for="{{tabs}}" wx:key="index">
+          <view 
+            class="tab-item {{currentIndex === index ? 'active' : ''}}" 
+            bindtap="switchTab" 
+            data-index="{{index}}"
+          >
+            {{item}}
+          </view>
+        </block>
+      </view>
+    </scroll-view>
   </view>
-</scroll-view>
+
+  <!-- 内容区域 -->
+  <swiper 
+    class="content-swiper" 
+    current="{{currentIndex}}" 
+    duration="300" 
+    bindchange="swiperChange"
+  >
+    <!-- 广场 -->
+    <swiper-item>
+      <scroll-view scroll-y class="content-scroll">
+        <!-- 广场内容 -->
+        <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view>
+        <view class="content-item">紧急救助需求</view>
+        <view class="content-item">志愿者招募</view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 动态 -->
+    <swiper-item>
+      <scroll-view scroll-y class="content-scroll">
+        <!-- 动态内容 -->
+        <view class="content-item" bindtap="onpost">救助站日常动态</view>
+        <view class="content-item">成功救助案例</view>
+        <view class="content-item">领养后续故事</view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 科普 -->
+    <swiper-item>
+      <scroll-view scroll-y class="content-scroll">
+        <!-- 科普内容 -->
+        <view class="content-item"  bindtap="onkepu">养宠知识</view>
+        <view class="content-item">疾病预防</view>
+        <view class="content-item">动物行为解读</view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+</view>

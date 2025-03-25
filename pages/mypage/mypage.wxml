@@ -1,35 +1,76 @@
-<!--pages/mypage/mypage.wxml-->
-<!-- 用户信息区域 -->
-<view class="user-header">
-
-<image class="avatar" src="{{avatarUrl}}"></image>
-<!-- userInfo.nickName -->
-  <text class="username">{{isLogin ?  '欢迎尊贵的svip用户': '点击登录'}}</text>
-
-  <button class="hidden-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-</button>
-
-<button wx:if="{{isLogin==false}}" class="hidden-button2" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-</button>
-
-</view>
-
-
-<!-- 资产概览 -->
-<view class="assets-card">
-  <view class="asset-item" wx:for="{{assets}}" wx:key="index">
-    <image class="asset-icon" src="{{item.icon}}"></image>
-    <text class="asset-text">{{item.value}}</text>
-    <text class="asset-label">{{item.label}}</text>
+<!--pages/user/index/index.wxml-->
+<scroll-view scroll-y class="page-content" >
+  <view class="a">
+    <view class="view" />
   </view>
-</view>
+     <!-- 用户信息区域  open-type="chooseAvatar"
+        bindchooseavatar="onChooseAvatar"-->
 
-<!-- 核心功能入口 -->
-<view class="function-grid">
-  <view class="grid-item" wx:for="{{functions}}" wx:key="index" bindtap="navigateTo" data-url="{{item.url}}">
-    <image class="grid-icon" src="{{item.icon}}"></image>
-    <text>{{item.name}}</text>
-  </view>
-</view>
+    <view class="bar1">
 
-<!-- 快递信息（登录后显示） -->
+      <block wx:if="{{!hasUserInfo}}">
+      <button class="hidden-button"
+      wx:if="{{canIUseGetUserProfile}}" bindtap="handleLogin" style="position: relative; left: 2rpx; top: 0rpx">微信一键登录</button>
+      <!-- <image class="avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image> -->
+    </block>
+<!-- <button class="hidden-button"bind:tap="navigateTologin" wx:if="{{isLogin==false}}" style="position: absolute; left: 306rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
+        手机号登录
+</button> -->
+<!-- 头像区域 -->
+
+<block wx:else>
+      <view class="user">
+        <image class="avatar" src="{{userInfo.avatarUrl}}" style="position: relative; left: -43rpx; top: 96rpx"></image>
+        <view class="name" style="width: 258rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -34rpx">{{userInfo.nickname}}</view>
+        <view class="sub" style="width: 235rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 147rpx; top: -49rpx">关爱生命，人人有责</view>
+      </view>
+</block>
+
+      <view class="card"><iconfont type="saoyisao" size="25px" color="white" /></view>
+    </view>
+    <view class="bar2">
+      <view class="item">
+        <view class="num">{{stats.followers}}</view>
+        粉丝
+      </view>
+      <view class="item">
+        <view class="num">{{stats.posts}}</view>
+        动态
+      </view>
+      <view class="item">
+        <view class="num">{{stats.following}}</view>
+        关注
+      </view>
+      <!-- 在mypage.wxml的列表区域添加 -->
+    </view>
+    <!-- <view class="label">我的订单</view>
+    <view class="bar3">
+      <view class="item">
+        <image class="ico" src="/images/icon/2.png"></image>
+        <view>待付款</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/1.png"></image>
+        <view>待发货</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/3.png"></image>
+        <view>待收货</view>
+      </view>
+      <view class="item">
+        <image class="ico" src="/images/icon/4.png"></image>
+        <view>待评价</view>
+      </view>
+    </view> -->
+    <view class="label">我的爱宠</view>
+    <view class="bar4">
+      <view class="item"></view>
+      <view class="item"></view>
+    </view>
+    <view class="list">
+      <view class="item"bindtap="goToFavorites"><iconfont type="favorite" class="ico" size="20px" />我的收藏</view>
+      <view class="item"><iconfont type="comment" class="ico" size="20px" />我的评论</view>
+      <view class="item"><iconfont type="share" class="ico" size="20px" />我的分享</view>
+    </view>
+</scroll-view>
+<view class="page-tabbar page-ipx-safe-area"></view>

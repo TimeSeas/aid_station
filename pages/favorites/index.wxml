@@ -1,0 +1,16 @@
+<!-- pages/favorites/index.wxml -->
+<!-- 收藏列表纵向滚动容器 -->
+<scroll-view scroll-y class="fav-list">
+<!-- 
+    列表循环渲染块
+    - wx:for: 遍历favorites数组
+    - wx:key: 使用id作为唯一标识符
+    <!-- ⚡建议：添加虚拟滚动优化/下拉刷新 -->
+  <block wx:for="{{favorites}}" wx:key="id">
+  <!-- 收藏项容器 -->
+    <view class="fav-item" bindtap="goToDetail" data-id="{{item.id}}">
+    <!-- 文章标题 -->
+      <text>{{item.title}}</text>
+    </view>
+  </block>
+</scroll-view>
