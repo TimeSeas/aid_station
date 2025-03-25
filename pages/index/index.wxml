@@ -55,9 +55,9 @@
     <swiper-item>
       <scroll-view scroll-y class="content-scroll">
         <!-- 科普内容 -->
-        <view class="content-item"  bindtap="onkepu">养宠知识</view>
-        <view class="content-item">疾病预防</view>
-        <view class="content-item">动物行为解读</view>
+        <view class="content-item"  bindtap="onkepu">生存现状</view>
+        <view class="content-item" bindtap="onjiu">救助指南</view>
+        <view class="content-item" bindtap="onling">领养知识</view>
       </scroll-view>
     </swiper-item>
   </swiper>
