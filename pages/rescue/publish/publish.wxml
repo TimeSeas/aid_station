@@ -21,7 +21,7 @@
     <view class="form-item">
       <text class="label">上传照片</text>
       <view class="uploader">
-        <block wx:for="{{images}}" wx:key="*this">
+        <block wx:for="{{tempImages}}" wx:key="index">
           <image 
             src="{{item}}" 
             class="preview" 
@@ -31,7 +31,7 @@
           />
         </block>
         <view 
-          wx:if="{{images.length < 3}}" 
+          wx:if="{{tempImages.length < 3}}" 
           class="upload-btn" 
           bindtap="chooseImage"
         >
@@ -40,12 +40,6 @@
       </view>
     </view>
     
-    <button 
-      formType="submit" 
-      class="submit-btn" 
-      disabled="{{!formValid}}"
-    >
-      提交求助
-    </button>
+    <button formType="submit" class="submit-btn" bind:tap="submitForm">提交登记</button>
   </form>
 </view>

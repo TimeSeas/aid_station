@@ -59,9 +59,9 @@
   background: #07c160;
   color: #fff;
   border-radius: 40rpx;
-  font-size: 32rpx;
-  height: 88rpx;
-  line-height: 88rpx;
+  font-size: 37rpx;
+  height: 80rpx;
+  line-height: 52rpx;
 }
 
 .submit-btn[disabled] {

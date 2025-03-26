@@ -17,7 +17,7 @@ Page({
       url: 'http://118.178.92.183/api.php?action=getpost',
       method: 'GET',
       success: (res) => {
-        console.log('获取动态信息成功',res); // 控制台打印数据
+        console.log('获取动态信息成功',res.data.data); // 控制台打印数据
         this.setData({ posts: res.data });
       },
       fail: (err) => {
@@ -26,52 +26,52 @@ Page({
     })
   },
 
-// 跳转到详情页
-toPostDetail(e) {
-  const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
-  if (!postId) {
-    wx.showToast({ title: '数据加载中...', icon: 'none' });
-    return;
-  }
+// // 跳转到详情页
+// toPostDetail(e) {
+//   const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
+//   if (!postId) {
+//     wx.showToast({ title: '数据加载中...', icon: 'none' });
+//     return;
+//   }
   
-  console.log('跳转ID:', postId); // 调试用
-  wx.navigateTo({
-    url: `/pages/publish/post-detail/post-detail?id=${postId}` // 注意路径正确性
-  });
-},
+//   console.log('跳转ID:', postId); // 调试用
+//   wx.navigateTo({
+//     url: `/pages/publish/post-detail/post-detail?id=${postId}` // 注意路径正确性
+//   });
+// },
 
-// 点赞处理
-handleLike(e) {
-  this.updateInteraction(e, 'like');
-},
+// // 点赞处理
+// handleLike(e) {
+//   this.updateInteraction(e, 'like');
+// },
 
-// 差评处理
-handleDislike(e) {
-  this.updateInteraction(e, 'dislike');
-},
+// // 差评处理
+// handleDislike(e) {
+//   this.updateInteraction(e, 'dislike');
+// },
 
 // 通用交互更新方法
-updateInteraction(e, type) {
-  const { id, type: targetType } = e.currentTarget.dataset;
-  wx.request({
-    url: 'http://118.178.92.183/api.php',
-    method: 'POST',
-    data: {
-      action: type,
-      targetId: id,
-      targetType: targetType // 可以是post或comment
-    },
-    success: (res) => {
-      const posts = this.data.posts.map(post => {
-        if (post._id === id) {
-          return { ...post, [type+'s']: res.data.newCount };
-        }
-        return post;
-      });
-      this.setData({ posts });
-    }
-  })
-},
+// updateInteraction(e, type) {
+//   const { id, type: targetType } = e.currentTarget.dataset;
+//   wx.request({
+//     url: 'http://118.178.92.183/api.php',
+//     method: 'POST',
+//     data: {
+//       action: type,
+//       targetId: id,
+//       targetType: targetType // 可以是post或comment
+//     },
+//     success: (res) => {
+//       const posts = this.data.posts.map(post => {
+//         if (post._id === id) {
+//           return { ...post, [type+'s']: res.data.newCount };
+//         }
+//         return post;
+//       });
+//       this.setData({ posts });
+//     }
+//   })
+// },
   // 切换选项卡
   switchTab(e) {
     const index = e.currentTarget.dataset.index

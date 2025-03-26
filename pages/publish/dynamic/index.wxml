@@ -1,9 +1,8 @@
 <view class="publish-container">
-  <!-- 标题栏 -->
   <view class="header">
-    <view class="cancel-btn" bindtap="goBack">取消</view>
+    <view class="cancel-btn" bindtap="goBack"></view>
     <view class="title">发动态</view>
-    <view class="submit-btn" bindtap="handleSubmit">发布</view>
+    <view class="submit-btn" bindtap="formSubmit">发布</view>
   </view>
 
   <!-- 内容编辑区 -->
@@ -11,23 +10,19 @@
     <textarea 
       class="content-input"
       placeholder="分享新鲜事..."
-      placeholder-class="placeholder-style"
-      auto-height
-      maxlength="2000"
-      bindinput="onContentInput"
       value="{{content}}"
+      bindinput="onContentInput"
     ></textarea>
 
     <!-- 图片上传预览 -->
-    <view class="image-preview" wx:if="{{images.length > 0}}">
-      <block wx:for="{{images}}" wx:key="index">
+    <view class="image-preview" wx:if="{{tempImages.length > 0}}">
+      <block wx:for="{{tempImages}}" wx:key="index">
         <view class="preview-item">
           <image 
             class="preview-image"
             src="{{item}}"
             mode="aspectFill"
           />
-          <view class="delete-btn" bindtap="removeImage" data-index="{{index}}">×</view>
         </view>
       </block>
     </view>
@@ -36,13 +31,13 @@
   <!-- 底部功能区 -->
   <view class="toolbar">
     <view class="tool-item" bindtap="chooseImage">
-      <image class="icon" src="/images/icon-image.png" />图片
+      <image class="icon" src="/images/icon/uploadImage.png" />上传图片
     </view>
     <view class="tool-item">
-      <image class="icon" src="/images/icon-topic.png" />话题
+      <image class="icon" src="/images/icon/对话.png" />话题
     </view>
     <view class="tool-item">
-      <image class="icon" src="/images/icon-location.png" />位置
+      <image class="icon" src="/images/icon/location.png" />位置
     </view>
     <view class="word-count">{{2000 - content.length}}/2000</view>
   </view>

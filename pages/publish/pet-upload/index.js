@@ -15,19 +15,11 @@ Page({
   },
 
   onLoad() {
-    // this.checkAdminPermission()
   },
-
-  // checkAdminPermission() {
-  //   if (!app.globalData.userInfo || app.globalData.userInfo.role !== 1) {
-  //     wx.redirectTo({ url: '/pages/mypage/mypage' })
-  //   }
-  // },
   speciesChange(e) {
     this.setData({
       speciesIndex: e.detail.value
     })
-    // console.log('已选择品种:', this.data.speciesList[e.detail.value])
   },
   chooseImage() {
     if (this.data.tempImages.length >= 6) {
@@ -67,7 +59,7 @@ Page({
       const uploadTasks = this.data.tempImages.map(path => 
         new Promise((resolve, reject) => {
           wx.uploadFile({
-            url: 'http://118.178.92.183/upload.php',
+            url: 'http://118.178.92.183/upload.php?type=pet',
             filePath: path,
             name: 'image',
             success: (res) => {
@@ -94,6 +86,12 @@ Page({
   },
 
   formSubmit(e) {
+    const user = wx.getStorageSync('authData');
+    
+    if (!user) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
    console.log('[表单数据]', e.detail.value); // 检查实际收到的数据
     if (this.data.isSubmitting) return;
     this.setData({ isSubmitting: true });
