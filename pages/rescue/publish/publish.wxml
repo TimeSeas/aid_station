@@ -1,0 +1,51 @@
+<view class="container">
+  <form bindsubmit="submitForm">
+    <view class="form-item">
+      <text class="label">动物名称</text>
+      <input 
+        name="name" 
+        placeholder="请输入动物名称" 
+        class="input"
+      />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">发现位置</text>
+      <input 
+        name="location" 
+        placeholder="请输入详细位置" 
+        class="input"
+      />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">上传照片</text>
+      <view class="uploader">
+        <block wx:for="{{images}}" wx:key="*this">
+          <image 
+            src="{{item}}" 
+            class="preview" 
+            mode="aspectFill"
+            bindtap="previewImage" 
+            data-url="{{item}}"
+          />
+        </block>
+        <view 
+          wx:if="{{images.length < 3}}" 
+          class="upload-btn" 
+          bindtap="chooseImage"
+        >
+          <text>+</text>
+        </view>
+      </view>
+    </view>
+    
+    <button 
+      formType="submit" 
+      class="submit-btn" 
+      disabled="{{!formValid}}"
+    >
+      提交求助
+    </button>
+  </form>
+</view>

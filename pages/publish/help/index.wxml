@@ -1,2 +1,62 @@
-<!--pages/publish/help/index.wxml-->
-<text>这是求助页面</text>
+<!-- 救助列表页 -->
+<view class="container">
+  <scroll-view 
+    scroll-y 
+    class="scroll-view" 
+    bindscrolltolower="onReachBottom"
+  >
+    <view class="publish-btn" bindtap="goToPublish">
+      <text class="btn-text">发布求助</text>
+    </view>
+
+    <view class="rescue-list">
+      <block wx:for="{{rescueList}}" wx:key="rescue_id">
+        <view class="rescue-item">
+          <swiper 
+            class="image-swiper" 
+            indicator-dots="{{true}}" 
+            autoplay="{{false}}"
+          >
+            <block wx:for="{{item.images}}" wx:key="*this">
+              <swiper-item>
+                <image src="{{item}}" mode="aspectFill" class="swiper-image"/>
+              </swiper-item>
+            </block>
+          </swiper>
+          
+          <view class="info-box">
+            <view class="header">
+              <text class="name">{{item.name}}</text>
+              <view class="status {{item.status ? 'rescued' : ''}}">
+                {{item.status ? '已救助' : '待救助'}}
+              </view>
+            </view>
+            
+            <view class="location">
+              <image src="/images/location.png" class="icon-small"/>
+              <text>{{item.location}}</text>
+            </view>
+            
+            <view class="user-info">
+              <image src="{{item.avatar}}" class="avatar"/>
+              <text>{{item.nickname}}</text>
+              <text class="time">{{item.time}}</text>
+            </view>
+
+            <button 
+              wx:if="{{item.user_id === currentUser}}" 
+              class="status-btn" 
+              bindtap="toggleStatus" 
+              data-id="{{item.rescue_id}}"
+            >
+              {{item.status ? '标记为未救助' : '标记为已救助'}}
+            </button>
+          </view>
+        </view>
+      </block>
+      
+      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
+      <view wx:else class="no-more">没有更多了~</view>
+    </view>
+  </scroll-view>
+</view>

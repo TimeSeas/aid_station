@@ -1,66 +1,93 @@
-// pages/publish/help/index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    rescueList: [],
+    page: 1,
+    pageSize: 10,
+    hasMore: true,
+    currentUser: null
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad() {
+    this.getCurrentUser();
+    this.loadData();
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 获取当前用户
+  getCurrentUser() {
+    const user = wx.getStorageSync('userInfo');
+    this.setData({ currentUser: user?.user_id });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
+  // 加载数据
+  loadData() {
+    if (!this.data.hasMore) return;
 
+    const { page, pageSize } = this.data;
+    wx.showLoading({ title: '加载中' });
+
+    wx.request({
+      url: 'http://118.178.92.183/api.php?action=getRescueList',
+      method: 'GET',
+      data: { page, pageSize },
+      success: res => {
+        if (res.data.code === 0) {
+          const newList = res.data.data || [];
+          this.setData({
+            rescueList: [...this.data.rescueList, ...newList],
+            hasMore: newList.length >= pageSize
+          });
+        }
+      },
+      complete: () => wx.hideLoading()
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
+  // 切换状态
+  toggleStatus(e) {
+    const rescueId = e.currentTarget.dataset.id;
+    const item = this.data.rescueList.find(v => v.rescue_id === rescueId);
+    const newStatus = item.status ? 0 : 1;
 
+    wx.showLoading({ title: '处理中' });
+    wx.request({
+      url: 'http://118.178.92.183/api.php?action=updateRescueStatus',
+      method: 'POST',
+      data: {
+        rescue_id: rescueId,
+        status: newStatus,
+        user_id: this.data.currentUser
+      },
+      success: res => {
+        if (res.data.code === 0) {
+          const list = this.data.rescueList.map(v => {
+            if (v.rescue_id === rescueId) v.status = newStatus;
+            return v;
+          });
+          this.setData({ rescueList: list });
+        }
+      },
+      complete: () => wx.hideLoading()
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 跳转发布页
+  goToPublish() {
+    wx.navigateTo({ url: '/pages/rescue/publish/publish' });
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
+  // 触底加载
   onReachBottom() {
-
+    if (this.data.hasMore) {
+      this.setData({ page: this.data.page + 1 }, () => {
+        this.loadData();
+      });
+    }
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.setData({ rescueList: [], page: 1, hasMore: true }, () => {
+      this.loadData();
+    });
   }
-})
+});

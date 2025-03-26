@@ -21,7 +21,7 @@
 <block wx:else>
       <view class="user">
         <image class="avatar" src="{{userInfo.avatarUrl}}" style="position: relative; left: -43rpx; top: 96rpx"></image>
-        <view class="name" style="width: 258rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -34rpx">{{userInfo.nickname}}</view>
+        <view class="name" style="width: 358rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -33rpx">{{userInfo.nickname}}</view>
         <view class="sub" style="width: 235rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 147rpx; top: -49rpx">关爱生命，人人有责</view>
       </view>
 </block>

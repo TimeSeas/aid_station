@@ -37,18 +37,39 @@
         <!-- 广场内容 -->
         <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view>
         <view class="content-item">紧急救助需求</view>
-        <view class="content-item">志愿者招募</view>
-      </scroll-view>
-    </swiper-item>
-
-    <!-- 动态 -->
-    <swiper-item>
-      <scroll-view scroll-y class="content-scroll">
-        <!-- 动态内容 -->
+        <view class="content-item">志愿者招募</view> <!-- 动态内容 -->
         <view class="content-item" bindtap="onpost">救助站日常动态</view>
         <view class="content-item">成功救助案例</view>
         <view class="content-item">领养后续故事</view>
       </scroll-view>
+    </swiper-item>
+
+    <!-- 论坛 -->
+  <!-- 论坛 -->
+    <swiper-item>
+      <!-- 帖子列表 -->
+      <view class="post-list">
+        <block wx:for="{{posts}}" wx:key="_id">
+          <view class="post-item" bindtap="toPostDetail" data-id="{{item._id}}">
+            <view class="title">{{item.title}}</view>
+            <view class="content-preview">
+              {{item.content.length > 50 ? item.content.substring(0, 50) + '...' : item.content}}
+              <text wx:if="{{item.content.length > 50}}" class="view-more">点击查看全文</text>
+            </view>
+            <view class="meta">
+              <text>作者：{{item.nickname}}</text>
+              <view class="interaction">
+                <view class="like" bindtap="handleLike" data-id="{{item._id}}" data-type="post">
+                  👍 {{item.likes || 0}}
+                </view>
+                <view class="dislike" bindtap="handleDislike" data-id="{{item._id}}" data-type="post">
+                  👎 {{item.dislikes || 0}}
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
     </swiper-item>
 
     <!-- 科普 -->

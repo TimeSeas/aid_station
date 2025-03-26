@@ -1,1 +1,103 @@
-/* pages/publish/help/index.wxss */
+/* 继承宠物列表样式 */
+.rescue-list {
+  padding: 20rpx;
+}
+
+.rescue-item {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.image-swiper {
+  height: 400rpx;
+  border-radius: 16rpx 16rpx 0 0;
+}
+
+.swiper-image {
+  width: 100%;
+  height: 100%;
+}
+
+.info-box {
+  padding: 20rpx;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.status {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  background: #ff9900;
+  color: #fff;
+}
+
+.status.rescued {
+  background: #09bb07;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.icon-small {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 10rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  margin-right: 10rpx;
+}
+
+.time {
+  margin-left: auto;
+}
+
+.status-btn {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  background: #f0f0f0;
+  color: #333;
+  border-radius: 8rpx;
+}
+
+.publish-btn {
+  background: #07c160;
+  color: white;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  margin: 20rpx;
+}
+
+.btn-text {
+  font-size: 32rpx;
+}
