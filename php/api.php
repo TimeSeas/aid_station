@@ -241,7 +241,129 @@ if ($_GET['action'] == 'getPetList') {
   }
 }
 
+// 救助信息提交接口
+if ($_GET['action'] == 'submitRescue') {
+  try {
+      $data = json_decode(file_get_contents('php://input'), true);
+      
+      // 参数验证
+      if(empty($data['name']) || empty($data['location']) || empty($data['user_id'])){
+          throw new Exception('参数不完整');
+      }
 
+      // 事务处理
+      $conn->begin_transaction();
+      
+      // 插入主表
+      $stmt = $conn->prepare("INSERT INTO rescue_animal 
+          (name, location, user_id) 
+          VALUES (?, ?, ?)");
+      $stmt->bind_param("ssi", 
+          $data['name'],
+          $data['location'],
+          $data['user_id']
+      );
+      
+      if(!$stmt->execute()){
+          throw new Exception('主表插入失败');
+      }
+      
+      $rescueId = $conn->insert_id;
+      
+      // 插入图片表
+      if(!empty($data['images'])){
+          $stmtImg = $conn->prepare("INSERT INTO rescue_image 
+              (rescue_id, image_url) 
+              VALUES (?, ?)");
+          
+          foreach($data['images'] as $img){
+              $stmtImg->bind_param("is", $rescueId, $img);
+              if(!$stmtImg->execute()){
+                  throw new Exception('图片插入失败');
+              }
+          }
+      }
+      
+      $conn->commit();
+      echo json_encode(['code' => 0, 'rescue_id' => $rescueId]);
+      
+  } catch(Exception $e) {
+      $conn->rollback();
+      http_response_code(400);
+      echo json_encode(['code' => 500, 'message' => $e->getMessage()]);
+  }
+  exit;
+}
+
+// 救助列表接口（带分页）
+if ($_GET['action'] == 'getRescueList') {
+  $page = max(1, (int)($_GET['page'] ?? 1));
+  $pageSize = 10;
+  $offset = ($page - 1) * $pageSize;
+
+  try {
+      $stmt = $conn->prepare("
+          SELECT r.rescue_id, r.name, r.location, r.status, 
+              GROUP_CONCAT(ri.image_url) as images,
+              u.nickname, u.avatar,
+              DATE_FORMAT(r.created_at, '%Y-%m-%d %H:%i') as time
+          FROM rescue_animal r
+          LEFT JOIN rescue_image ri ON r.rescue_id = ri.rescue_id
+          JOIN user u ON r.user_id = u.user_id
+          GROUP BY r.rescue_id
+          ORDER BY r.created_at DESC
+          LIMIT ?, ?
+      ");
+      $stmt->bind_param("ii", $offset, $pageSize);
+      $stmt->execute();
+      
+      $result = $stmt->get_result();
+      $data = [];
+      while($row = $result->fetch_assoc()){
+          $row['images'] = $row['images'] ? explode(',', $row['images']) : [];
+          $row['status'] = (int)$row['status'];
+          $data[] = $row;
+      }
+      
+      echo json_encode(['code' => 0, 'data' => $data]);
+      
+  } catch(Exception $e) {
+      http_response_code(500);
+      echo json_encode(['code' => 500, 'message' => '服务器错误']);
+  }
+  exit;
+}
+
+// 更新救助状态接口
+if ($_GET['action'] == 'updateRescueStatus') {
+  try {
+      $data = json_decode(file_get_contents('php://input'), true);
+      
+      if(empty($data['rescue_id']) || !isset($data['status']) || empty($data['user_id'])){
+          throw new Exception('参数错误');
+      }
+      
+      $stmt = $conn->prepare("UPDATE rescue_animal 
+          SET status = ? 
+          WHERE rescue_id = ? AND user_id = ?");
+      $stmt->bind_param("iii", 
+          $data['status'],
+          $data['rescue_id'],
+          $data['user_id']
+      );
+      
+      if($stmt->execute()){
+          echo json_encode(['code' => 0]);
+      } else {
+          throw new Exception('更新失败');
+      }
+      
+  } catch(Exception $e) {
+      http_response_code(400);
+      echo json_encode(['code' => 500, 'message' => $e->getMessage()]);
+  }
+  exit;
+}
 
 $conn->close();
 ?>

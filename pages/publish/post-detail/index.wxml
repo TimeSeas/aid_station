@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="post-content">
+    <view class="title">{{post.title}}</view>
+    <view class="author">作者：{{post.nickname}}</view>
+    <view class="full-content">{{post.content}}</view>
+    <view class="interaction">
+      <view bindtap="handleLike" data-id="{{post._id}}" data-type="post">
+        👍 {{post.likes || 0}}
+      </view>
+      <view bindtap="handleDislike" data-id="{{post._id}}" data-type="post">
+        👎 {{post.dislikes || 0}}
+      </view>
+    </view>
+  </view>
+
+  <view class="comments">
+    <block wx:for="{{comments}}" wx:key="_id">
+      <view class="comment-item">
+        <view class="comment-content">{{item.content}}</view>
+        <view class="comment-meta">
+          <text>{{item.nickname}}</text>
+          <view class="comment-interaction">
+            <view bindtap="handleLike" data-id="{{item._id}}" data-type="comment">
+              👍 {{item.likes || 0}}
+            </view>
+            <view bindtap="handleDislike" data-id="{{item._id}}" data-type="comment">
+              👎 {{item.dislikes || 0}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="comment-input">
+    <input 
+      placeholder="写下你的评论..." 
+      bindinput="onCommentInput" 
+      value="{{commentContent}}"
+    />
+    <button bindtap="submitComment">发布评论</button>
+  </view>
+</view>

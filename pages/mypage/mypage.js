@@ -50,22 +50,28 @@ Page({
 
   // 获取用户信息（必须由点击直接触发）
   getWechatUserInfo() {
+    
     return new Promise((resolve, reject) => {
       wx.getUserProfile({
         desc: '用于完善会员资料',
         success: ({ userInfo }) => resolve(userInfo),
+        
         fail: reject
       })
+     
     })
   },
 
   // 处理登录流程
   async processLogin(userInfo) {
     try {
+      
       const { code } = await wx.login();
       
       // 将请求包装成Promise
       const loginResult = await new Promise((resolve, reject) => {
+
+        console.log('+++++++',userInfo)
         wx.request({
           url: 'http://118.178.92.183/api.php?action=wechatLogin',
           method: 'POST',

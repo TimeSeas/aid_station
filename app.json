@@ -6,6 +6,7 @@
     "pages/publish/pet-upload/index",
     "pages/publish/dynamic/index",
     "pages/publish/help/index",
+    "pages/publish/post-detail/index",
     "pages/home/post/post",
     "pages/knowledge/index",
     "pages/knowledge/detail",
@@ -14,7 +15,8 @@
     "pages/myhome/login-form/login-form",
     "pages/myhome/register-form/register-form",
     "pages/home/square/pet/pet",
-    "pages/home/square/pet_detaill/pet_detaill"
+    "pages/home/square/pet_detaill/pet_detaill",
+    "pages/rescue/publish/publish"
   ],
   "window": {
     "enablePullDownRefresh": true,
