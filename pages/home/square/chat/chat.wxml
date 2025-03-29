@@ -1,0 +1,28 @@
+<view class="chat-container">
+  <!-- 顶部导航栏 -->
+  <view class="chat-header">
+    <view class="header-left">
+      <text class="back-icon"></text>
+      <text class="header-title">{{username}}</text> <!-- 动态显示用户名 -->
+    </view>
+    <view class="header-right">
+      <text class="tag">店铺</text>
+      <text class="more-icon">...</text>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view class="chat-messages" scroll-y>
+    <view class="message" wx:for="{{messages}}" wx:key="index">
+      <view class="message-bubble {{item.isUser ? 'user-bubble' : 'admin-bubble'}}">
+        {{item.content}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入框 -->
+  <view class="chat-input" style="height: 145rpx; display: flex; box-sizing: border-box">
+    <input style="height: 81rpx; display: block; box-sizing: border-box; position: relative; left: 10rpx; top: -11rpx" placeholder="请输入消息" value="{{inputValue}}" bindinput="onInput" />
+    <button class="send-btn" bindtap="sendMessage" style="width: 154rpx; display: block; box-sizing: border-box; left: -10rpx; top: -10rpx; line-height: 30rpx; position: relative">发送</button>
+  </view>
+</view>

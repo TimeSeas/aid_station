@@ -11,6 +11,12 @@ App({
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
   },
+
+  
+    genderFilter(gender) {
+      return gender === 'male' ? '公' : '母';
+    },
+  
   login() {
  // 前端调用示例（配合微信API）
   },

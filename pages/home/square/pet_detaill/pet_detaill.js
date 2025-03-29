@@ -26,6 +26,7 @@ Page({
       },
       success: res => {
         if (res.data.code === 0) {
+
           this.setData({ pet: res.data.data });
         } else {
           wx.showToast({ title: '加载失败', icon: 'none' });
@@ -37,6 +38,18 @@ Page({
       complete: () => {
         wx.hideLoading();
       }
+    });
+  },
+  navigateToChat() {
+    // 跳转到“聊一聊”页面
+    wx.navigateTo({
+      url: `/pages/home/square/chat/chat?petId=${this.data.pet.created_by}` // 传递宠物 ID 参数
+    });
+  },
+  navigateToAdoptForm() {
+    // 跳转到“我要领养”表单页面
+    wx.navigateTo({
+      url: `/pages/home/square/adoptForm/adoptForm?petId=${this.data.petId}` // 传递宠物 ID 参数
     });
   }
 });
