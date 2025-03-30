@@ -5,16 +5,11 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
 try {
-    // // 验证授权
-    // $token = str_replace('Bearer ', '', $_SERVER['HTTP_AUTHORIZATION'] ?? '');
-    // if (empty($token)) {
-    //     throw new Exception('未授权访问', 401);
-    // }
-
     // 数据库连接
     $conn = new PDO(
         'mysql:host=118.178.92.183;dbname=wxproject;charset=utf8mb4',
@@ -22,62 +17,74 @@ try {
         'zlx_password'
     );
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // // 获取用户信息
-    // $stmt = $conn->prepare("SELECT user_id, role FROM user WHERE token = ?");
-    // $stmt->execute([$token]);
-    // $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // if (!$user || $user['role'] != 1) {
-    //     throw new Exception('无操作权限', 403);
-    // }
-
+    $conn->beginTransaction(); // 开启事务
     // 参数验证
-    $required = ['name', 'species', 'photos'];
-    foreach ($required as $field) {
-        if (empty($data[$field])) {
-            throw new Exception("缺少必要参数: $field", 400);
-        }
-    }
+    $required = ['name', 'species', 'photos', 'created_by'];
+   // 在参数验证段新增字段长度校验
+$fieldLimits = [
+  'name' => 50,
+  'species' => 50,
+  'health_status' => 100
+];
 
-    // 转换照片格式
-    $photos = array_map('trim', explode(',', $data['photos']));
-    if (count($photos) === 0) {
+foreach ($fieldLimits as $field => $limit) {
+  if (isset($data[$field]) && mb_strlen($data[$field]) > $limit) {
+      throw new Exception("字段 {$field} 超过最大长度限制 {$limit}", 400);
+  }
+}
+
+    // 验证照片格式为数组
+    if (!is_array($data['photos']) || count($data['photos']) === 0) {
         throw new Exception('至少需要一张照片', 400);
     }
 
-    // 构建插入数据
-    $petData = [
-        ':name' => substr($data['name'], 0, 50),
-        ':species' => substr($data['species'], 0, 50),
-        ':gender' => isset($data['gender']) ? (int)$data['gender'] : 0,
-        ':age' => isset($data['age']) ? max(0, (int)$data['age']) : null,
-        ':health_status' => substr($data['health_status'] ?? '', 0, 100),
-        ':description' => substr($data['description'] ?? '', 0, 500),
-        ':photos' => json_encode($photos),
-        ':created_by' => $user['user_id']
-    ];
-
-    // 执行插入
+    // 插入宠物基本信息
     $stmt = $conn->prepare("
         INSERT INTO pet (
             name, species, gender, age, 
-            health_status, description, photos, created_by
+            health_status, description, created_by
         ) VALUES (
             :name, :species, :gender, :age,
-            :health_status, :description, :photos, :created_by
+            :health_status, :description, :created_by
         )
     ");
 
-    $stmt->execute($petData);
+    $stmt->execute([
+      ':name' => $data['name'],
+      ':species' => $data['species'],
+      ':gender' => $data['gender'] ?? 0,
+      ':age' => isset($data['age']) ? (int)$data['age'] : null,
+      ':health_status' => $data['health_status'] ?? '', // 前端字段名需同步修改
+      ':description' => $data['description'] ?? '',
+      ':created_by' => (int)$data['created_by']
+  ]);
+
+    $petId = $conn->lastInsertId();
+
+    // 插入图片到pet_image表
+    $imageStmt = $conn->prepare("
+        INSERT INTO pet_image (pet_id, image_url, created_by)
+        VALUES (:pet_id, :image_url, :created_by)
+    ");
+
+    foreach ($data['photos'] as $imageUrl) {
+        $imageStmt->execute([
+            ':pet_id' => $petId,
+            ':image_url' => substr($imageUrl, 0, 255),
+            ':created_by' => (int)$data['created_by']
+        ]);
+    }
+
+    $conn->commit();
 
     echo json_encode([
         'code' => 200,
         'msg' => '登记成功',
-        'pet_id' => $conn->lastInsertId()
+        'pet_id' => $petId
     ]);
 
 } catch (PDOException $e) {
+    $conn->rollBack();
     error_log("Database Error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['code' => 500, 'msg' => '数据库操作失败']);

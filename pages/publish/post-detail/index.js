@@ -1,76 +1,97 @@
 Page({
   data: {
-    post: {},          // 帖子详情
-    comments: [],      // 评论列表
-    newComment: ''     // 新评论内容
+    post: {},
+    comments: [],
+    commentContent: '',
+    postId: null
   },
 
-  onLoad(e) {
-    const postId = e.id
-    this.getPostDetail(postId)
-    this.getComments(postId)
-  },
-
-  // 获取帖子详情
-  async getPostDetail(postId) {
-    const db = wx.cloud.database()
-    const res = await db.collection('posts')
-      .doc(postId)
-      .get()
+  onLoad(options) {
+    const postId = options.id;
+    this.setData({ postId });
     
-    // 更新浏览数
-    db.collection('posts').doc(postId).update({
+    // 获取帖子详情
+    wx.request({
+      url: 'http://118.178.92.183/api.php',
+      method: 'GET',
       data: {
-        viewCount: res.data.viewCount + 1
+        action: 'getPostDetail',
+        id: postId
+      },
+      success: (res) => {
+        this.setData({ post: res.data.post });
+      }
+    });
+
+    // 获取评论
+    wx.request({
+      url: 'http://118.178.92.183/api.php',
+      method: 'GET',
+      data: {
+        action: 'getComments',
+        postId: postId
+      },
+      success: (res) => {
+        this.setData({ comments: res.data.comments });
+      }
+    });
+  },
+
+  onCommentInput(e) {
+    this.setData({ commentContent: e.detail.value });
+  },
+
+  submitComment() {
+    const { commentContent, postId } = this.data;
+    if (!commentContent.trim()) return;
+
+    wx.request({
+      url: 'http://118.178.92.183/api.php',
+      method: 'POST',
+      data: {
+        action: 'addComment',
+        postId: postId,
+        content: commentContent,
+        nickname: "当前用户" // 应从用户信息获取
+      },
+      success: (res) => {
+        this.setData({ 
+          comments: [...this.data.comments, res.data.newComment],
+          commentContent: '' 
+        });
+      }
+    });
+  },
+
+  // 复用点赞/差评方法
+  handleLike(e) {
+    this.updateInteraction(e, 'like');
+  },
+
+  handleDislike(e) {
+    this.updateInteraction(e, 'dislike');
+  },
+
+  updateInteraction(e, type) {
+    const { id, type: targetType } = e.currentTarget.dataset;
+    wx.request({
+      url: 'http://118.178.92.183/api.php',
+      method: 'POST',
+      data: {
+        action: type,
+        targetId: id,
+        targetType: targetType
+      },
+      success: (res) => {
+        const key = targetType === 'post' ? 'post' : 'comments';
+        const updatedData = this.data[key].map(item => {
+          if (item._id === id) {
+            return { ...item, [type+'s']: res.data.newCount };
+          }
+          return item;
+        });
+        this.setData({ [key]: updatedData });
       }
     })
-    
-    this.setData({ post: res.data })
-  },
-
-  // 获取评论列表
-  async getComments(postId) {
-    const db = wx.cloud.database()
-    const res = await db.collection('comments')
-      .where({ postId })
-      .orderBy('createTime', 'asc')
-      .get()
-    
-    this.setData({ comments: res.data })
-  },
-
-  // 输入评论内容
-  onCommentInput(e) {
-    this.setData({ newComment: e.detail.value })
-  },
-
-  // 提交评论
-  async submitComment() {
-    const { newComment } = this.data
-    if (!newComment.trim()) return
-    
-    try {
-      const { userInfo } = await wx.getUserProfile({
-        desc: '用于评论身份标识'
-      })
-
-      await wx.cloud.callFunction({
-        name: 'createComment',
-        data: {
-          postId: this.data.post._id,
-          content: newComment,
-          author: userInfo.openId,
-          avatar: userInfo.avatarUrl,
-          nickname: userInfo.nickName
-        }
-      })
-
-      this.getComments(this.data.post._id)
-      this.setData({ newComment: '' })
-      wx.showToast({ title: '评论成功' })
-    } catch (err) {
-      console.error(err)
-      wx.showToast({ title: '评论失败', icon: 'none' })
-    }
   }
-})
+});

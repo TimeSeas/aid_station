@@ -8,6 +8,9 @@ page{
 	display: flex;
   flex-direction: column;
   background-color: rgb(245, 245, 245);
+  --weibo-orange: #ff8200;
+  --weibo-bg: #f6f6f6;
+  --weibo-border: #e5e5e5;
 }
 
 .page-content {

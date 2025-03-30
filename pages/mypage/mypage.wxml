@@ -3,25 +3,15 @@
   <view class="a">
     <view class="view" />
   </view>
-     <!-- 用户信息区域  open-type="chooseAvatar"
-        bindchooseavatar="onChooseAvatar"-->
-
     <view class="bar1">
-
       <block wx:if="{{!hasUserInfo}}">
-      <button class="hidden-button"
-      wx:if="{{canIUseGetUserProfile}}" bindtap="handleLogin" style="position: relative; left: 2rpx; top: 0rpx">微信一键登录</button>
-      <!-- <image class="avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image> -->
+      <button class="hidden-button" bindtap="handleLogin" style="position: relative; left: 2rpx; top: 0rpx">微信一键登录</button>
     </block>
-<!-- <button class="hidden-button"bind:tap="navigateTologin" wx:if="{{isLogin==false}}" style="position: absolute; left: 306rpx; top: 109rpx; width: 262rpx; display: block; box-sizing: border-box">
-        手机号登录
-</button> -->
 <!-- 头像区域 -->
-
 <block wx:else>
-      <view class="user">
-        <image class="avatar" src="{{userInfo.avatarUrl}}" style="position: relative; left: -43rpx; top: 96rpx"></image>
-        <view class="name" style="width: 258rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -34rpx">{{userInfo.nickname}}</view>
+      <view class="user" bindtap="bindViewTap">
+        <image   class="avatar" src="{{userInfo.avatarUrl}}" style="position: relative; left: -43rpx; top: 96rpx"></image>
+        <view  class="name" style="width: 258rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 124rpx; top: -34rpx">{{userInfo.nickname}}</view>
         <view class="sub" style="width: 235rpx; height: 49rpx; display: block; box-sizing: border-box; position: relative; left: 147rpx; top: -49rpx">关爱生命，人人有责</view>
       </view>
 </block>

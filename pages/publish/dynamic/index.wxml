@@ -1,24 +1,44 @@
-<view class="container">
-  <!-- 发帖按钮 -->
-  <button 
-    class="publish-btn" 
-    bindtap="toPublish"
-  >+</button>
+<view class="publish-container">
+  <view class="header">
+    <view class="cancel-btn" bindtap="goBack"></view>
+    <view class="title">发动态</view>
+    <view class="submit-btn" bindtap="formSubmit">发布</view>
+  </view>
 
-  <!-- 帖子列表 -->
-  <view class="post-list">
-    <block wx:for="{{posts}}" wx:key="_id">
-      <view 
-        class="post-item" 
-        bindtap="toPostDetail" 
-        data-id="{{item._id}}"
-      >
-        <view class="title">{{item.title}}</view>
-        <view class="meta">
-          <text>作者：{{item.nickname}}</text>
-          <text>评论：{{item.commentCount}}</text>
+  <!-- 内容编辑区 -->
+  <view class="editor-container">
+    <textarea 
+      class="content-input"
+      placeholder="分享新鲜事..."
+      value="{{content}}"
+      bindinput="onContentInput"
+    ></textarea>
+
+    <!-- 图片上传预览 -->
+    <view class="image-preview" wx:if="{{tempImages.length > 0}}">
+      <block wx:for="{{tempImages}}" wx:key="index">
+        <view class="preview-item">
+          <image 
+            class="preview-image"
+            src="{{item}}"
+            mode="aspectFill"
+          />
         </view>
-      </view>
-    </block>
+      </block>
+    </view>
+  </view>
+
+  <!-- 底部功能区 -->
+  <view class="toolbar">
+    <view class="tool-item" bindtap="chooseImage">
+      <image class="icon" src="/images/icon/uploadImage.png" />上传图片
+    </view>
+    <view class="tool-item">
+      <image class="icon" src="/images/icon/对话.png" />话题
+    </view>
+    <view class="tool-item">
+      <image class="icon" src="/images/icon/location.png" />位置
+    </view>
+    <view class="word-count">{{2000 - content.length}}/2000</view>
   </view>
 </view>

@@ -1,0 +1,37 @@
+<view class="container">
+  <!-- 图片轮播 -->
+  <swiper class="pet-swiper" indicator-dots="{{true}}">
+    <block wx:for="{{pet.images}}" wx:key="index">
+      <swiper-item>
+        <image src="{{item}}" mode="aspectFill" class="swiper-image"/>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 基本信息 -->
+  <view class="info-card">
+    <view class="title">{{pet.name}}</view>
+    <view class="meta">
+      <text class="species">{{pet.species}}</text>
+      <text class="gender">{{pet.gender | genderFilter}}</text>
+      <text class="age">{{pet.age}}月</text>
+    </view>
+    
+    <!-- 领养状态 -->
+    <view class="status {{pet.is_adopted ? 'adopted' : ''}}">
+      {{pet.is_adopted ? '已领养' : '待领养'}}
+    </view>
+  </view>
+
+  <!-- 详细信息 -->
+  <view class="detail-card">
+    <view class="section">
+      <text class="label">健康状态：</text>
+      <text class="value">{{pet.health_status || '暂无记录'}}</text>
+    </view>
+    <view class="section">
+      <text class="label">宠物描述：</text>
+      <text class="value">{{pet.description}}</text>
+    </view>
+  </view>
+</view>
