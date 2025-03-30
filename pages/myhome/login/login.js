@@ -57,55 +57,83 @@ Page({
   // 提交到服务器
 // 提交到服务器（安全增强版）
 submitUserInfo() {
+  if (this.data.isSubmitting) return;
+  this.setData({ isSubmitting: true });
+
   const { avatarUrl, nickName } = this.data.userInfo;
   const userId = getApp().globalData.userId;
 
-  // 增强验证
-  if (!nickName || nickName.length > 64) {
-    wx.showToast({ title: '昵称需1-64字符', icon: 'none' });
-    return;
-  }
-  if (!/^(https?|wxfile):\/\//.test(avatarUrl)) {
-    wx.showToast({ title: '请重新选择头像', icon: 'none' });
+  // 昵称长度验证
+  if (nickName.length > 64) {
+    wx.showToast({ title: '昵称不能超过64字符', icon: 'none' });
+    this.setData({ isSubmitting: false });
     return;
   }
 
   wx.showLoading({ title: '保存中...' });
 
-  // 统一使用upload.php接口
-  wx.uploadFile({
-    url: 'http://118.178.92.183/upload.php?type=avatar',
-    filePath: avatarUrl,
-    name: 'image', // 与后端接收字段名一致
-    formData: {
-      nickname: nickName,
-      userId: userId
-    },
-    success: (res) => {
-      try {
-        const data = JSON.parse(res.data);
-        if (data.code === 200) {
-          // 更新本地缓存
+  // 判断头像是否为本地文件
+  const isLocalAvatar = avatarUrl.startsWith('wxfile://') || avatarUrl.startsWith('http://tmp/');
+
+  if (isLocalAvatar) {
+    // 上传新头像
+    wx.uploadFile({
+      url: 'http://118.178.92.183/upload.php?type=avatar',
+      filePath: avatarUrl,
+      name: 'image',
+      formData: {
+        nickname: nickName,
+        userId: userId
+      },
+      success: (res) => {
+        try {
+          const data = JSON.parse(res.data);
+          if (data.code === 200) {
+            wx.setStorageSync('userProfile', {
+              avatarUrl: data.newAvatarUrl,
+              nickName: nickName
+            });
+            wx.showToast({ title: '保存成功' });
+            setTimeout(() => wx.navigateBack(), 1500);
+          } else {
+            throw new Error(data.msg || '保存失败');
+          }
+        } catch (e) {
+          wx.showToast({ title: e.message, icon: 'none' });
+        }
+      },
+      complete: () => {
+        wx.hideLoading();
+        this.setData({ isSubmitting: false });
+      }
+    });
+  } else {
+    // 仅更新资料
+    wx.request({
+      url: 'http://118.178.92.183/updataUser.php',
+      method: 'POST',
+      data: {
+        userId: userId,
+        nickname: nickName,
+        avatarUrl: avatarUrl
+      },
+      success: (res) => {
+        if (res.data.code === 200) {
           wx.setStorageSync('userProfile', {
-            avatarUrl: data.newAvatarUrl,
+            avatarUrl: avatarUrl,
             nickName: nickName
           });
-          // 更新全局数据
-          getApp().globalData.userInfo.avatar = data.newAvatarUrl;
           wx.showToast({ title: '保存成功' });
+          setTimeout(() => wx.navigateBack(), 1500);
         } else {
-          throw new Error(data.msg || '保存失败');
+          wx.showToast({ title: res.data.msg || '保存失败', icon: 'none' });
         }
-      } catch (e) {
-        wx.showToast({ title: e.message, icon: 'none' });
+      },
+      complete: () => {
+        wx.hideLoading();
+        this.setData({ isSubmitting: false });
       }
-    },
-    fail: () => {
-      wx.showToast({ title: '网络请求失败', icon: 'none' });
-    },
-    complete: () => {
-      wx.hideLoading();
-    }
-  });
+    });
+  }
 }
 })

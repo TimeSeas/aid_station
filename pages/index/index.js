@@ -26,6 +26,16 @@ Page({
     })
   },
 
+  // 成功回调数据:
+  
+  // json
+  // {
+  //   "code": 200,
+  //   "msg": "发送成功",
+  //   "data": {
+  //     "msg_id": 新插入消息的ID（自增主键）
+  //   }
+  // }
 // // 跳转到详情页
 // toPostDetail(e) {
 //   const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
@@ -86,9 +96,10 @@ Page({
 
   // 点击跳转
   onpost(){
-    wx.navigateTo({
-      url: "/pages/home/post/post"  // 请确认实际页面路径
-  });
+  //   wx.navigateTo({
+  //     url: "/pages/home/post/post"  // 请确认实际页面路径
+  // });
+  sendMessage(1, 2, '你好，想领养这只猫咪');//发送者id，接受者id，聊天内容
   },
   onsquare_pet(){
     wx.navigateTo({
@@ -111,3 +122,29 @@ Page({
   });
 }
 })
+
+function sendMessage(senderId, receiverId, content) {
+  wx.request({
+    url: 'http://118.178.92.183/chat/chat_send.php',
+    method: 'POST',
+    header: {
+      'Content-Type': 'application/json'
+    },
+    data: {
+      sender_id: senderId,
+      receiver_id: receiverId,
+      content: content,
+      msg_type: 1 // 文本类型
+    },
+    success(res) {
+      if (res.data.code === 200) {
+        console.log('消息发送成功，ID:', res.data.data.msg_id);
+      } else {
+        console.error('发送失败:', res.data.msg);
+      }
+    },
+    fail(err) {
+      console.error('网络错误:', err);
+    }
+  });
+}

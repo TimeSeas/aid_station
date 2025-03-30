@@ -1,4 +1,5 @@
 <?php
+//api.php
 header("Access-Control-Allow-Origin:*"); // 解决跨域问题:cite[1]:cite[5]
 header("Content-Type: application/json; charset=UTF-8");
 $host = "118.178.92.183"; // 阿里云服务器IP
@@ -37,74 +38,6 @@ if ($_GET['action'] == 'wechatLogin') {
   echo json_encode(['userId' => $userId ?? $user['user_id']]);
   exit;
 }
-
-
-
-// 头像上传接口
-if ($_GET['action'] == 'uploadAvatar') {
-  $userId = $_POST['userId'];
-  
-  // 处理文件上传
-  $file = $_FILES['avatar'];
-  $targetDir = 'uploads/';
-  $fileName = uniqid().'.jpg';
-  move_uploaded_file($file['tmp_name'], $targetDir.$fileName);
-
-  // 更新数据库
-  $url = 'http://118.178.92.183/'.$targetDir.$fileName;
-  $updateSql = "UPDATE user SET avatar = ? WHERE user_id = ?";
-  $stmt = $conn->prepare($updateSql);
-  $stmt->bind_param("si", $url, $userId);
-  $stmt->execute();
-
-  echo json_encode(['url' => $url]);
-  exit;
-}
-
-
-
-
-// // 更新头像接口
-//已弃用
-// if ($_GET['action'] == 'updateAvatar') {
-//   // 参数验证
-//   if(empty($_POST['userId']) || !is_numeric($_POST['userId'])){
-//       echo json_encode(['status' => 'error', 'message' => 'Invalid user ID']);
-//       exit;
-//   }
-  
-//   $userId = (int)$_POST['userId'];
-//   $avatarUrl = $_POST['avatar'];
-//   $nickName = substr(trim($_POST['nickname']), 0, 64); // 防止超长
-
-//   // 上传头像到永久存储（示例使用本地存储）
-//   $uploadDir = '/var/www/uploads/';
-//   $fileName = 'avatar_'.$userId.'_'.time().'.jpg';
-//   $filePath = $uploadDir.$fileName;
-  
-//   if(!file_put_contents($filePath, file_get_contents($avatarUrl))){
-//       echo json_encode(['status' => 'error', 'message' => 'Avatar upload failed']);
-//       exit;
-//   }
-
-//   // 更新数据库
-//   $updateSql = "UPDATE user SET avatar = ?, nickname = ? WHERE user_id = ?";
-//   $stmt = $conn->prepare($updateSql);
-//   $stmt->bind_param("ssi", $fileName, $nickName, $userId);
-  
-//   if ($stmt->execute()) {
-//       // 清理旧头像文件（可选）
-//       $oldAvatar = $conn->query("SELECT avatar FROM user WHERE user_id=$userId")->fetch_assoc()['avatar'];
-//       if(file_exists($uploadDir.$oldAvatar)) unlink($uploadDir.$oldAvatar);
-      
-//       echo json_encode(['status' => 'success']);
-//   } else {
-//       error_log("SQL Error: ".$conn->error); // 记录详细错误
-//       echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
-//   }
-//   exit;
-// }
-
 
 
 
@@ -292,66 +225,72 @@ if ($_GET['action'] == 'getPetList') {
 
 
 // 发布救助信息
-if ($_GET['action'] == 'createRescue') {
-  $data = json_decode(file_get_contents('php://input'), true);
-  
+if ($action === 'createRescue') {
   try {
+      // 获取表单数据
+      $rawData = file_get_contents("php://input");
+      parse_str($rawData, $postData); // 处理表单格式数据
+      
+      $name = trim($postData['name'] ?? '');
+      $location = trim($postData['location'] ?? '');
+      $user_id = intval($postData['user_id'] ?? 0);
+      $images = isset($postData['images']) ? (array)$postData['images'] : [];
+
+      // 基础验证
+      if (empty($name) || empty($location) || $user_id === 0) {
+          throw new Exception('缺少必要参数');
+      }
+
+      // 数据库连接
+      $conn = new mysqli("localhost", "username", "password", "database");
+      if ($conn->connect_error) {
+          throw new Exception('数据库连接失败');
+      }
+
       $conn->begin_transaction();
 
-      // 插入宠物信息
-      $stmt = $conn->prepare("
-          INSERT INTO pet 
-          (name, species, gender, age, health_status, created_by, created_at)
-          VALUES (?, ?, ?, ?, ?, ?, NOW())
-      ");
-      $stmt->bind_param(
-          "ssiisi",
-          $data['name'],
-          $data['species'],
-          $data['gender'],
-          $data['age'],
-          $data['health_status'],
-          $data['user_id']
-      );
-      $stmt->execute();
-      $petId = $conn->insert_id;
+      // 1. 创建宠物记录
+      $stmt = $conn->prepare("INSERT INTO pet 
+          (name, species, gender, created_by) 
+          VALUES (?, '未知物种', 0, ?)");
+      $stmt->bind_param("si", $name, $user_id);
+      if (!$stmt->execute()) {
+          throw new Exception('创建宠物记录失败');
+      }
+      $pet_id = $conn->insert_id;
 
-      // 插入图片记录
-      if (!empty($data['images'])) {
-          $stmt = $conn->prepare("
-              INSERT INTO pet_image (pet_id, image_url, created_by)
-              VALUES (?, ?, ?)
-          ");
-          foreach ($data['images'] as $image) {
-              $stmt->bind_param("isi", $petId, $image, $data['user_id']);
-              $stmt->execute();
+      // 2. 创建救助请求
+      $stmt = $conn->prepare("INSERT INTO help_request 
+          (pet_id, user_id, address, latitude, longitude) 
+          VALUES (?, ?, ?, 0.0, 0.0)");
+      $stmt->bind_param("iis", $pet_id, $user_id, $location);
+      if (!$stmt->execute()) {
+          throw new Exception('创建救助请求失败');
+      }
+
+      // 3. 保存图片记录
+      foreach ($images as $url) {
+          $stmt = $conn->prepare("INSERT INTO pet_image 
+              (pet_id, image_url, created_by) 
+              VALUES (?, ?, ?)");
+          $stmt->bind_param("isi", $pet_id, $url, $user_id);
+          if (!$stmt->execute()) {
+              throw new Exception('保存图片失败');
           }
       }
 
-      // 插入救助请求
-      $stmt = $conn->prepare("
-          INSERT INTO help_request 
-          (pet_id, user_id, latitude, longitude, address, emergency_level)
-          VALUES (?, ?, ?, ?, ?, ?)
-      ");
-      $stmt->bind_param(
-          "iiddsi",
-          $petId,
-          $data['user_id'],
-          $data['latitude'],
-          $data['longitude'],
-          $data['address'],
-          $data['emergency_level']
-      );
-      $stmt->execute();
-
       $conn->commit();
-      echo json_encode(['code' => 0, 'rescue_id' => $conn->insert_id]);
+      echo json_encode(['code' => 0, 'msg' => '提交成功']);
 
-  } catch(Exception $e) {
+  } catch (Exception $e) {
       $conn->rollback();
-      error_log("发布失败: ".$e->getMessage());
-      echo json_encode(['code' => 500, 'message' => '发布失败']);
+      echo json_encode([
+          'code' => 500, 
+          'msg' => $e->getMessage(),
+          'error' => $conn->error ?? null
+      ]);
+  } finally {
+      if (isset($conn)) $conn->close();
   }
 }
 

@@ -18,6 +18,11 @@ Page({
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
         this.getTabBar().setData({ active: 2 })
       }
+      
+      // 每次页面显示时刷新数据
+      if (getApp().globalData.userId) {
+        this.loadUserData(true) // 添加强制刷新参数
+      }
     },
   onLoad() {
     const authData = wx.getStorageSync('authData');
