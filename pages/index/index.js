@@ -9,7 +9,6 @@ Page({
       { image: '/images/animals/dog3.jpg' }
     ],
     posts: [],          // 帖子列表数据
-    isLoading: false    // 加载状态
   },
 
   onLoad() {
@@ -26,30 +25,18 @@ Page({
     })
   },
 
-  // 成功回调数据:
-  
-  // json
-  // {
-  //   "code": 200,
-  //   "msg": "发送成功",
-  //   "data": {
-  //     "msg_id": 新插入消息的ID（自增主键）
-  //   }
-  // }
-// // 跳转到详情页
-// toPostDetail(e) {
-//   const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
-//   if (!postId) {
-//     wx.showToast({ title: '数据加载中...', icon: 'none' });
-//     return;
-//   }
-  
-//   console.log('跳转ID:', postId); // 调试用
-//   wx.navigateTo({
-//     url: `/pages/publish/post-detail/post-detail?id=${postId}` // 注意路径正确性
-//   });
-// },
-
+// 跳转到详情页
+toPostDetail(e) {
+  const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
+  if (!postId) {
+    wx.showToast({ title: '数据加载中...', icon: 'none' });
+    return;
+  }
+  console.log('跳转postID:', postId); 
+  wx.navigateTo({
+    url: `/pages/publish/post-detail/index?id=${postId}`  // 注意使用反引号
+  });
+},
 // // 点赞处理
 // handleLike(e) {
 //   this.updateInteraction(e, 'like');

@@ -50,7 +50,7 @@
       <!-- 帖子列表 -->
       <view class="post-list">
         <block wx:for="{{posts.data}}" wx:key="_id">
-          <view class="post-item" bindtap="toPostDetail" data-id="{{item._id}}">
+          <view class="post-item" bindtap="toPostDetail" data-id="{{item.post_id}}">
             <view class="title">{{item.title}}</view>
             <view class="content-preview">
               {{item.content.length > 50 ? item.content.substring(0, 50) + '...' : item.content}}
