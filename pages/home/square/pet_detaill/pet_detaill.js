@@ -43,7 +43,7 @@ Page({
   navigateToChat() {
     // 跳转到“聊一聊”页面
     wx.navigateTo({
-      url: `/pages/home/square/chat/chat?petId=${this.data.pet.created_by}` // 传递宠物 ID 参数
+      url: `/pages/home/square/chat/chat?masterid=${this.data.pet.created_by}` // zhur ID 参数
     });
   },
   navigateToAdoptForm() {

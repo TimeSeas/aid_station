@@ -3,26 +3,26 @@
   <view class="chat-header">
     <view class="header-left">
       <text class="back-icon"></text>
-      <text class="header-title">{{username}}</text> <!-- 动态显示用户名 -->
+      <image src="{{recipientInfo.avatarUrl}}" class="avatar"></image>
+      <text class="header-title">{{recipientInfo.nickname}}</text>
+      <text class="unread-count" wx:if="{{unreadCount > 0}}">({{unreadCount}})</text>
     </view>
-    <view class="header-right">
-      <text class="tag">店铺</text>
-      <text class="more-icon">...</text>
-    </view>
+    
   </view>
 
   <!-- 消息列表 -->
   <scroll-view class="chat-messages" scroll-y>
     <view class="message" wx:for="{{messages}}" wx:key="index">
       <view class="message-bubble {{item.isUser ? 'user-bubble' : 'admin-bubble'}}">
-        {{item.content}}
+        <image src="{{item.avatarUrl}}" class="avatar"></image>
+        <view class="bubble-content">{{item.content}}</view>
       </view>
     </view>
   </scroll-view>
 
   <!-- 底部输入框 -->
-  <view class="chat-input" style="height: 145rpx; display: flex; box-sizing: border-box">
-    <input style="height: 81rpx; display: block; box-sizing: border-box; position: relative; left: 10rpx; top: -11rpx" placeholder="请输入消息" value="{{inputValue}}" bindinput="onInput" />
-    <button class="send-btn" bindtap="sendMessage" style="width: 154rpx; display: block; box-sizing: border-box; left: -10rpx; top: -10rpx; line-height: 30rpx; position: relative">发送</button>
+  <view class="chat-input" style="height: 141rpx; display: flex; box-sizing: border-box">
+    <input style="height: 60rpx; display: block; box-sizing: border-box" placeholder="请输入消息" value="{{inputValue}}" bindinput="onInput" />
+    <button class="send-btn" bindtap="SendMessage" style="width: 164rpx; display: block; box-sizing: border-box; left: 0rpx; top: 0rpx; line-height: 40rpx">发送</button>
   </view>
 </view>
