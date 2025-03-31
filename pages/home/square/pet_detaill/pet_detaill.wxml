@@ -34,4 +34,10 @@
       <text class="value">{{pet.description}}</text>
     </view>
   </view>
+  <!-- 固定底部按钮区域 -->
+  <view class="fixed-bottom" Estyle="position: fixed; left: -33rpx; top: 1281rpx" style="line-height: 80rpx; padding-bottom: 10rpx; height: 156rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 1304rpx">
+    <button class="chat-btn" bindtap="navigateToChat" style="position: relative; left: -2rpx; top: -24rpx; width: 331rpx; display: block; box-sizing: border-box; line-height: 50rpx">聊一聊</button>
+    <button class="adopt-btn" bindtap="navigateToAdoptForm" style="position: relative; left: -2rpx; top: -24rpx; width: 331rpx; display: block; box-sizing: border-box; line-height: 50rpx">我要领养</button>
+  </view>
+
 </view>

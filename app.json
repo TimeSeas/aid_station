@@ -18,6 +18,8 @@
     "pages/myhome/register-form/register-form",
     "pages/home/square/pet/pet",
     "pages/home/square/pet_detaill/pet_detaill",
+    "pages/home/square/chat/chat",
+    "pages/home/square/adoptForm/adoptForm",
     "pages/rescue/publish/publish"
   ],
   "window": {
