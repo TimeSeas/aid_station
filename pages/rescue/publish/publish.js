@@ -86,56 +86,40 @@ Page({
       }
 
       // 上传图片并准备数据
-      const images = await this._uploadImages();
-      
-      // 构建请求数据（移除地理坐标字段）
-      const postData = {
-        name: this.data.name,
-        address: this.data.location,  // 使用手动输入的地址
-        images: images,
-        user_id: user.user_id,
-        // 保留必要默认字段
-        species: "未知物种",
-        gender: 0,
-        age: 1,
-        health_status: "待检查",
-        emergency_level: 1
-      };
-
-      // 发送请求
-      wx.request({
-        url: 'http://118.178.92.183/api.php?action=createRescue',
-        method: 'POST',
-        header: {
-          'content-type': 'application/json'
-        },
-        data: postData,
-        success: (res) => {
-          if (res.statusCode === 200) {
-            if (res.data.code === 0) {
-              wx.navigateBack();
-              wx.showToast({ title: '提交成功' });
-            } else {
-              wx.showToast({ title: res.data.msg || '提交失败', icon: 'none' });
-            }
-          } else {
-            wx.showToast({ title: `服务器错误: ${res.statusCode}`, icon: 'none' });
-          }
-        },
-        fail: (err) => {
-          wx.showToast({ title: '网络请求失败', icon: 'none' });
-        },
-        complete: () => {
-          wx.hideLoading();
-          this.setData({ isSubmitting: false });
-        }
-      });
+      this._uploadImages()
+      .then(uploadedImageUrls => {
+        this.submitPetInfo({
+          name: this.data.name,
+          location: this.data.location,
+          images: uploadedImageUrls,
+          user_id: user.userId
+        })
+      })
     } catch (error) {
       wx.showToast({ title: error.message, icon: 'none' });
       this.setData({ isSubmitting: false });
     }
   },
 
+  submitPetInfo(postData) {
+    wx.request({
+      url: 'http://118.178.92.183/help_request/createResue.php',
+      method: 'POST',
+      data: postData,
+      success: (res) => {
+        // console.log('完整响应:', res); // 调试日志
+        if (res.data?.code === 0) {
+          wx.navigateBack();
+          wx.showToast({ title: '提交成功' });
+        }else {
+          wx.showToast({ 
+            title: res.data?.msg || `错误码: ${res.statusCode}`,
+            icon: 'none'
+          });
+        }
+      }
+    })
+  },
   // 图片预览
   previewImage(e) {
     const url = e.currentTarget.dataset.url;

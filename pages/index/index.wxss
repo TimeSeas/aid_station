@@ -76,3 +76,100 @@
   border-radius: 12rpx;
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
 }
+
+
+
+
+
+
+
+
+
+
+
+/* 结合网页1的布局和网页4的视觉设计 */
+.container {
+  height: 100vh;
+  background: #f7f7f7;
+}
+
+.scroll-view {
+  height: 100%;
+}
+
+.pet-list {
+  padding: 20rpx;
+}
+
+.pet-item {
+  display: flex;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+}
+
+.pet-cover {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 8rpx;
+  margin-right: 24rpx;
+}
+
+.info-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.title-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-right: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  padding: 4rpx 12rpx;
+  font-size: 24rpx;
+  border-radius: 8rpx;
+  background: #07c160;
+  color: #fff;
+}
+
+.status.adopted {
+  background: #e64340;
+}
+
+.meta-line {
+  display: flex;
+  align-items: center;
+}
+
+.species {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+
+.age {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.loading-text,
+.no-more {
+  text-align: center;
+  padding: 30rpx;
+  font-size: 28rpx;
+  color: #999;
+}

@@ -9,6 +9,13 @@ Page({
       { image: '/images/animals/dog3.jpg' }
     ],
     posts: [],          // 帖子列表数据
+
+
+
+    petList: [],
+    page: 1,
+    pageSize: 10,
+    hasMore: true
   },
 
   onLoad() {
@@ -23,8 +30,40 @@ Page({
         console.error('请求失败', err);
       }
     })
+    this.loadData();
   },
+  loadData() {
+    if (!this.data.hasMore) return;
 
+    const { page, pageSize } = this.data;
+    wx.showNavigationBarLoading();
+    
+    wx.request({
+      url: 'http://118.178.92.183/api.php?action=getPetList',
+      method: 'GET',
+      data: {
+        action: 'getPetList',
+        page,
+        pageSize
+      },
+      success: res => {
+        if (res.data.code === 0) {
+          const newList = res.data.data || [];
+          this.setData({
+            petList: [...this.data.petList, ...newList],
+            hasMore: newList.length >= pageSize
+          });
+        }
+      },
+      fail: () => {
+        wx.showToast({ title: '加载失败', icon: 'none' });
+      },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+        wx.stopPullDownRefresh();
+      }
+    });
+  },
 // 跳转到详情页
 toPostDetail(e) {
   const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
@@ -83,10 +122,6 @@ toPostDetail(e) {
 
   // 点击跳转
   onpost(){
-  //   wx.navigateTo({
-  //     url: "/pages/home/post/post"  // 请确认实际页面路径
-  // });
-  sendMessage(1, 2, '你好，想领养这只猫咪');//发送者id，接受者id，聊天内容
   },
   onsquare_pet(){
     wx.navigateTo({
@@ -106,6 +141,24 @@ toPostDetail(e) {
   onling(){
     wx.navigateTo({
       url: "/pages/knowledge/lingyang"  // 请确认实际页面路径
+  });
+},
+onPublishHelp() {
+  wx.navigateTo({
+      url: "/pages/publish/help/index"  // 请确认实际页面路径
+  });
+},
+onReachBottom() {
+  if (this.data.hasMore) {
+    this.setData({ page: this.data.page + 1 }, () => {
+      this.loadData();
+    });
+  }
+},
+
+onPullDownRefresh() {
+  this.setData({ petList: [], page: 1, hasMore: true }, () => {
+    this.loadData();
   });
 }
 })

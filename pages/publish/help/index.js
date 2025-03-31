@@ -15,7 +15,7 @@ Page({
 
   getCurrentUser() {
     const authData = wx.getStorageSync('authData');
-    this.setData({ currentUser: authData?.user_id });
+    this.setData({ currentUser: authData.userId });
   },
 
   loadData() {

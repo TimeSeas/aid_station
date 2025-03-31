@@ -16,7 +16,7 @@
             indicator-dots="{{true}}" 
             autoplay="{{false}}"
           >
-            <block wx:for="{{item.images.split(',')}}" wx:key="*this">
+            <block wx:for="{{item.images}}" wx:key="*this">
               <swiper-item>
                 <image src="{{item}}" mode="aspectFill" class="swiper-image"/>
               </swiper-item>
@@ -32,18 +32,17 @@
             </view>
             
             <view class="location">
-              <image src="/images/location.png" class="icon-small"/>
+              <image src="/images/icon/location.png" class="icon-small"/>
               <text>{{item.location}}</text>
             </view>
             
             <view class="user-info">
               <image src="{{item.avatar}}" class="avatar"/>
               <text>{{item.nickname}}</text>
-              <text class="time">{{item.created_at}}</text>
+              <text class="time">{{item.time}}</text>
             </view>
-
             <button 
-              wx:if="{{item.user_id === currentUser}}" 
+              wx:if="{{item.user_id==currentUser}}" 
               class="status-btn" 
               bindtap="toggleStatus" 
               data-id="{{item.rescue_id}}"
@@ -53,7 +52,6 @@
           </view>
         </view>
       </block>
-      
       <view wx:if="{{!isLoading && hasMore}}" class="loading-text">加载更多...</view>
       <view wx:if="{{!hasMore}}" class="no-more">—— 没有更多了 ——</view>
     </view>

@@ -33,15 +33,53 @@
   >
     <!-- 广场 -->
     <swiper-item>
-      <scroll-view scroll-y class="content-scroll">
+      <!-- <scroll-view scroll-y class="content-scroll"> -->
         <!-- 广场内容 -->
-        <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view>
-        <view class="content-item">紧急救助需求</view>
-        <view class="content-item">志愿者招募</view> <!-- 动态内容 -->
-        <view class="content-item" bindtap="onpost">救助站日常动态</view>
-        <view class="content-item">成功救助案例</view>
-        <view class="content-item">领养后续故事</view>
-      </scroll-view>
+        <!-- <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view> -->
+        <!-- <view class="content-item" bind:tap="onPublishHelp">紧急救助需求</view> -->
+        <!-- <view class="content-item">志愿者招募</view> 动态内容 -->
+        <!-- <view class="content-item" bindtap="onpost">救助站日常动态</view> -->
+        <!-- <view class="content-item">成功救助案例</view> -->
+        <!-- <view class="content-item">领养后续故事</view> -->
+        <!-- 基于网页1的小程序列表结构优化 -->
+<view class="container">
+  <scroll-view 
+    scroll-y 
+    class="scroll-view" 
+    bindscrolltolower="onReachBottom"
+  >
+    <view class="pet-list">
+      <block wx:for="{{petList}}" wx:key="pet_id">
+        <navigator 
+          url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}" 
+          class="pet-item"
+        >
+          <image 
+            src="{{item.cover || '/images/default-pet.png'}}" 
+            mode="aspectFill" 
+            class="pet-cover"
+            lazy-load="true"
+          />
+          <view class="info-box">
+            <view class="title-line">
+              <text class="name">{{item.name}}</text>
+              <view class="status {{item.is_adopted ? 'adopted' : ''}}">
+                {{item.is_adopted ? '已领养' : '待领养'}}
+              </view>
+            </view>
+            <view class="meta-line">
+              <text class="species">{{item.species}}</text>
+              <text class="age">{{item.age}}月</text>
+            </view>
+          </view>
+        </navigator>
+      </block>
+      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
+      <view wx:else class="no-more">没有更多了~</view>
+    </view>
+  </scroll-view>
+</view>
+      <!-- </scroll-view> -->
     </swiper-item>
 
     <!-- 论坛 -->
