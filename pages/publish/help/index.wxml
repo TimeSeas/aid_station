@@ -1,4 +1,3 @@
-<!-- 救助列表页 -->
 <view class="container">
   <scroll-view 
     scroll-y 
@@ -6,7 +5,7 @@
     bindscrolltolower="onReachBottom"
   >
     <view class="publish-btn" bindtap="goToPublish">
-      <text class="btn-text">发布求助</text>
+      <text class="btn-text">+ 发布求助</text>
     </view>
 
     <view class="rescue-list">
@@ -17,7 +16,7 @@
             indicator-dots="{{true}}" 
             autoplay="{{false}}"
           >
-            <block wx:for="{{item.images}}" wx:key="*this">
+            <block wx:for="{{item.images.split(',')}}" wx:key="*this">
               <swiper-item>
                 <image src="{{item}}" mode="aspectFill" class="swiper-image"/>
               </swiper-item>
@@ -40,7 +39,7 @@
             <view class="user-info">
               <image src="{{item.avatar}}" class="avatar"/>
               <text>{{item.nickname}}</text>
-              <text class="time">{{item.time}}</text>
+              <text class="time">{{item.created_at}}</text>
             </view>
 
             <button 
@@ -55,8 +54,8 @@
         </view>
       </block>
       
-      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
-      <view wx:else class="no-more">没有更多了~</view>
+      <view wx:if="{{!isLoading && hasMore}}" class="loading-text">加载更多...</view>
+      <view wx:if="{{!hasMore}}" class="no-more">—— 没有更多了 ——</view>
     </view>
   </scroll-view>
 </view>

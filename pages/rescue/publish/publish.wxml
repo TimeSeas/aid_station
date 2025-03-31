@@ -6,6 +6,8 @@
         name="name" 
         placeholder="请输入动物名称" 
         class="input"
+        data-field="name"
+        bindinput="bindInput"
       />
     </view>
     
@@ -13,13 +15,15 @@
       <text class="label">发现位置</text>
       <input 
         name="location" 
-        placeholder="请输入详细位置" 
+        placeholder="请输入详细地址（示例：XX路XX号附近）" 
         class="input"
+        data-field="location"
+        bindinput="bindInput"
       />
     </view>
     
     <view class="form-item">
-      <text class="label">上传照片</text>
+      <text class="label">上传照片（最多3张）</text>
       <view class="uploader">
         <block wx:for="{{tempImages}}" wx:key="index">
           <image 
@@ -40,6 +44,13 @@
       </view>
     </view>
     
-    <button formType="submit" class="submit-btn" bind:tap="submitForm">提交登记</button>
+    <button 
+      formType="submit" 
+      class="submit-btn" 
+      hover-class="none"
+      disabled="{{isSubmitting}}"
+    >
+      {{isSubmitting ? '提交中...' : '提交求助信息'}}
+    </button>
   </form>
 </view>
