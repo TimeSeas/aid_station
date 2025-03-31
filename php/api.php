@@ -12,6 +12,49 @@ $conn = new mysqli($host, $user, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// 新增：领养人信息提交接口
+if ($_GET['action'] == 'submitAdoptionInfo') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    // 参数验证
+    $required = ['gender', 'experience', 'marriage', 'housing', 'work', 'phone', 'address', 'wechat', 'message'];
+    foreach ($required as $field) {
+        if (!isset($data[$field])) {
+            echo json_encode(['code' => 400, 'message' => "缺少必要参数: $field"]);
+            exit;
+        }
+    }
+
+    try {
+        // 插入数据到数据库
+        $stmt = $conn->prepare("
+            INSERT INTO adoption_info 
+            (gender, experience, marriage, housing, work, phone, address, wechat, message, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+        $stmt->bind_param(
+            "sssssssss",
+            $data['gender'],
+            $data['experience'],
+            $data['marriage'],
+            $data['housing'],
+            $data['work'],
+            $data['phone'],
+            $data['address'],
+            $data['wechat'],
+            $data['message']
+        );
+        $stmt->execute();
+
+        echo json_encode(['code' => 200, 'message' => '提交成功']);
+    } catch (Exception $e) {
+        error_log("提交失败: " . $e->getMessage());
+        echo json_encode(['code' => 500, 'message' => '服务器错误']);
+    }
+    exit;
+}
+
 // 简化后的PHP接口（开发环境版）用户登录
 if ($_GET['action'] == 'wechatLogin') {
   $data = json_decode(file_get_contents('php://input'), true);

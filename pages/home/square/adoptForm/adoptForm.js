@@ -46,6 +46,35 @@ Page({
       return;
     }
 
+    // 新增：发送数据到后端
+    wx.request({
+      url: 'http://118.178.92.183/api.php?action=submitAdoptionInfo',
+      method: 'POST',
+      header: { 'Content-Type': 'application/json' },
+      data: {
+        gender: selectedGender,
+        experience: selectedExperience,
+        marriage: selectedMarriage,
+        housing: selectedHousing,
+        work: selectedWork,
+        phone: phone,
+        address: address,
+        wechat: wechat,
+        message: message
+      },
+      success: (res) => {
+        if (res.data.code === 200) {
+          wx.showToast({ title: '提交成功', icon: 'success' });
+        } else {
+          wx.showToast({ title: res.data.message || '提交失败', icon: 'none' });
+        }
+      },
+      fail: (err) => {
+        console.error('网络错误:', err);
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+      }
+    });
+    
     // 提交数据（示例：打印到控制台）
     console.log('提交的数据:', {
       gender: selectedGender,
