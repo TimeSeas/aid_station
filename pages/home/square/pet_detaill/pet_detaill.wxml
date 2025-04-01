@@ -1,3 +1,4 @@
+<!-- pages\home\square\pet_detaill\pet_detaill.wxml -->
 <view class="container">
   <!-- 图片轮播 -->
   <swiper class="pet-swiper" indicator-dots="{{true}}">

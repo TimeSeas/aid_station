@@ -16,6 +16,7 @@
     "pages/myhome/login/login",
     "pages/myhome/login-form/login-form",
     "pages/myhome/register-form/register-form",
+    "pages/myhome/userPost/userPost",
     "pages/home/square/pet/pet",
     "pages/home/square/pet_detaill/pet_detaill",
     "pages/home/square/chat/chat",

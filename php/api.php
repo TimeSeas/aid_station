@@ -179,6 +179,50 @@ if ($_GET['action'] == 'getpost') {
     'data' => $data
   ]);
 }
+
+
+// 根据用户ID获取动态
+else if ($_GET['action'] == 'getuserpost') {
+  $user_id = intval($_GET['user_id']); // 安全处理
+  
+  $sql = "SELECT 
+    p.post_id,
+    p.content,
+    p.like_count,
+    p.created_at AS post_time,
+    u.nickname,
+    u.avatar,
+    COALESCE(
+      JSON_ARRAYAGG(pi.image_url),
+      JSON_ARRAY()
+    ) AS images 
+  FROM 
+    post p
+    JOIN user u ON p.user_id = u.user_id
+    LEFT JOIN post_image pi ON p.post_id = pi.post_id
+  WHERE 
+    u.user_id = ?
+  GROUP BY 
+    p.post_id 
+  ORDER BY 
+    p.created_at DESC";
+  
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $user_id);
+  $stmt->execute();
+  
+  $result = $stmt->get_result();
+  $data = array();
+  while ($row = $result->fetch_assoc()) {
+    $row['images'] = json_decode($row['images'], true);
+    $data[] = $row;
+  }
+  
+  echo json_encode([
+    'code' => 200,
+    'data' => $data
+  ]);
+}
 // 获取单个动态详情接口
 if ($_GET['action'] == 'getpostdetail') {
   // 参数校验
@@ -274,7 +318,40 @@ if ($_GET['action'] == 'getPetDetail') {
   }
 }
 
+// 根据用户ID获取宠物列表
+if ($_GET['action'] == 'getUserPets') {
+  $userId = intval($_GET['user_id']);
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $pageSize = 10;
+  $offset = ($page - 1) * $pageSize;
 
+  try {
+    $sql = "SELECT p.pet_id, p.name, p.is_adopted, 
+            (SELECT image_url FROM pet_image WHERE pet_id = p.pet_id LIMIT 1) AS cover
+            FROM pet p
+            WHERE p.created_by = ?
+            ORDER BY p.created_at DESC
+            LIMIT ?, ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iii", $userId, $offset, $pageSize);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $data = [];
+    while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    echo json_encode([
+        'code' => 0,
+        'data' => $data
+    ]);
+  } catch(Exception $e) {
+    http_response_code(500);
+    echo json_encode(['code' => 500, 'message' => '服务器错误']);
+  }
+}
  
 // 获取宠物列表接口（带分页）
 if ($_GET['action'] == 'getPetList') {
