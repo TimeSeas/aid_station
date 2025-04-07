@@ -68,3 +68,41 @@
   color: #333;
   font-size: 32rpx;
 }
+
+/* 固定底部按钮区域 */
+.fixed-bottom {
+  position: fixed; /* 固定定位 */
+  bottom: 0; /* 距离底部 0 */
+  left: 0; /* 距离左侧 0 */
+  right: 0; /* 距离右侧 0 */
+  display: flex; /* 水平排列按钮 */
+  justify-content: space-around; /* 按钮之间均匀分布 */
+  align-items: center; /* 垂直居中对齐 */
+  background: #fff; /* 白色背景 */
+  padding: 20rpx 0; /* 上下内边距 */
+  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+  line-height: 70rpx; /* 行高 */
+  height: 136rpx; /* 高度 */
+  padding-bottom: 7rpx; /* 底部内边距 */
+}
+
+.chat-btn, .adopt-btn {
+  width: 45%; /* 按钮宽度占一半 */
+  height: 95rpx; /* 按钮高度 */
+  line-height: 60rpx; /* 文字垂直居中 */
+  font-size: 45rpx; /* 字体大小 */
+  border-radius: 50rpx; /* 圆角 */
+  color: #fff; /* 字体颜色 */
+  text-align: center; /* 文字居中 */
+  position: relative; /* 相对定位 */
+  top: -24rpx; /* 向上偏移 */
+  left: -2rpx; /* 向左偏移 */
+}
+
+.chat-btn {
+  background: #f8990b; /* 绿色背景 */
+}
+
+.adopt-btn {
+  background: #07ebcc; /* 红色背景 */
+}

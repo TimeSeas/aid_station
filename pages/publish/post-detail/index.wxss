@@ -1,42 +1,146 @@
+/* post-detail.wxss */
 .container {
   padding: 20rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
-.post-detail {
-  margin-bottom: 40rpx;
-}
-.title {
-  font-size: 36rpx;
-  font-weight: bold;
+
+/* 帖子卡片样式 */
+.post-card {
+  background: white;
+  border-radius: 12rpx;
+  padding: 30rpx;
   margin-bottom: 20rpx;
 }
-.content {
-  font-size: 30rpx;
+
+.user-info {
+  display: flex;
+  align-items: center;
   margin-bottom: 20rpx;
 }
-.meta {
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 20rpx;
-}
-.actions button {
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
   margin-right: 20rpx;
 }
-.comment-item {
-  border-bottom: 1rpx solid #eee;
-  padding: 20rpx 0;
+
+.nickname {
+  font-size: 28rpx;
+  color: #333;
 }
-.comment-meta {
+
+.post-content {
+  font-size: 32rpx;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 30rpx;
+}
+
+.grid-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  margin-bottom: 30rpx;
+}
+
+.image-item {
+  width: 100%;
+  height: 220rpx;
+  border-radius: 8rpx;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.time {
   font-size: 24rpx;
   color: #999;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+}
+
+.like-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 10rpx;
+}
+
+/* 评论列表样式 */
+.comment-list {
+  height: calc(100vh - 500rpx);
+}
+
+.comment-item {
+  display: flex;
+  padding: 30rpx;
+  background: white;
+  margin-bottom: 20rpx;
+  border-radius: 12rpx;
+}
+
+.comment-content {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
   margin-bottom: 10rpx;
 }
-.comment-actions button {
+
+.comment-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.delete-btn {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: auto;
+  padding: 0;
+  background: none;
+  line-height: 1;
+}
+
+/* 输入框区域 */
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.input {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 40rpx;
+  padding: 20rpx 30rpx;
   margin-right: 20rpx;
 }
-.comment-input textarea {
-  width: 100%;
-  height: 150rpx;
-  padding: 20rpx;
-  border: 1rpx solid #ccc;
-  margin-bottom: 20rpx;
+
+.submit-btn {
+  width: 140rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  background: #07c160;
+  color: white;
+  border-radius: 40rpx;
+  font-size: 28rpx;
 }

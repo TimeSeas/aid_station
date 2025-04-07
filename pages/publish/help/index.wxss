@@ -101,3 +101,16 @@
 .btn-text {
   font-size: 32rpx;
 }
+
+.no-more {
+  text-align: center;
+  color: #999;
+  padding: 30rpx;
+  font-size: 26rpx;
+}
+
+.loading-text {
+  text-align: center;
+  padding: 20rpx;
+  color: #666;
+}

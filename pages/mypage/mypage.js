@@ -2,8 +2,9 @@ const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia0
 Page({
   data: {
     hasUserInfo: false,
+    myPets: [], // 我的宠物列表
+    swiperCurrent: 0,
     userInfo: {
-      user_Id:0,
       avatarUrl: defaultAvatarUrl,
       nickName: '',
     },
@@ -11,7 +12,8 @@ Page({
       followers: 0,
       posts: 0,
       following: 0
-    }
+    },
+    userId:null
   },
     // 页面显示处理
     onShow() {
@@ -21,8 +23,14 @@ Page({
       
       // 每次页面显示时刷新数据
       if (getApp().globalData.userId) {
+        
         this.loadUserData(true) // 添加强制刷新参数
+        console.log('强制刷新成功')
+        this.setData({
+          userId:getApp().globalData.userId
+        })
       }
+
     },
   onLoad() {
     const authData = wx.getStorageSync('authData');
@@ -147,7 +155,39 @@ Page({
     } catch (error) {
       console.error('数据加载失败', error)
     }
+    this.loadMyPets();
   },
+    // 加载我的宠物
+    loadMyPets() {
+      const userId = getApp().globalData.userId;
+      wx.showLoading({ title: '加载宠物信息中' });
+      
+      wx.request({
+        url: 'http://118.178.92.183/api.php?action=getUserPets',
+        data: {
+          user_id: userId,
+          page: 1
+        },
+        success: res => {
+          if (res.data.code === 0) {
+            this.setData({
+              myPets: res.data.data.map(pet => ({
+                ...pet,
+                cover: pet.cover || '/images/default-pet.png'
+              }))
+            });
+          }
+        },
+        complete: () => wx.hideLoading()
+      });
+    },
+  
+    // 轮播图切换
+    swiperChange(e) {
+      this.setData({
+        swiperCurrent: e.detail.current
+      });
+    },
   // 跳转收藏
   goToFavorites() {
     wx.navigateTo({ url: '/pages/favorites/index' })

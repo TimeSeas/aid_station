@@ -3,6 +3,7 @@
 Page({
   data: {
     favorites: [] ,// 收藏列表数据源
+    filteredFavorites: [], // 过滤后的收藏列表
     searchKeyword: '' // 搜索关键字
   },
   onLoad() {
@@ -16,11 +17,18 @@ Page({
         });
       }
     }
-    this.setData({ favorites }); // 初始化列表数据
+    this.setData({ 
+      favorites, 
+      filteredFavorites: favorites 
+    });// 初始化列表数据
   },
   goToDetail(e) {
     const id = e.currentTarget.dataset.id; // 获取文章ID
     wx.navigateTo({ url: `/pages/knowledge/detail?id=${id}` }); // 跳转详情页
+  },
+  onInput(e) {
+    const keyword = e.detail.value.toLowerCase();
+    this.setData({ searchKeyword: keyword });
   },
   toggleFavorite(e) {
     const id = e.currentTarget.dataset.id; // 获取文章ID
@@ -39,15 +47,19 @@ Page({
 
     wx.showToast({ title: isFavorite ? '收藏成功' : '取消收藏' });
   },
-  onSearchInput(e) {
-    const keyword = e.detail.value.toLowerCase(); // 获取输入的关键字并转换为小写
-    this.setData({ searchKeyword: keyword }); // 更新搜索关键字
-
-    // 过滤收藏列表
-    const filteredFavorites = this.data.favorites.filter(item => 
-      item.title.toLowerCase().includes(keyword) || 
-      item.summary.toLowerCase().includes(keyword)
+  onSearchIconTap() {
+    const { searchKeyword, favorites } = this.data;
+    if (!searchKeyword) {
+      this.setData({ filteredFavorites: favorites }); // 如果关键字为空，显示所有收藏
+      return;
+    }
+    // 根据关键字过滤收藏列表
+    const filtered = favorites.filter(item =>
+      item.title.toLowerCase().includes(searchKeyword) ||
+      item.summary.toLowerCase().includes(searchKeyword)
     );
-    this.setData({ favorites: filteredFavorites });
+    this.setData({ filteredFavorites: filtered }); // 更新过滤后的列表
   }
+  
+
 });

@@ -32,18 +32,18 @@
 <!-- pages/favorites/index.wxml -->
 <view class="container">
 <view class="search-box" style="height: 83rpx; display: block; box-sizing: border-box">
-    <input 
+  <input 
       placeholder="搜索收藏的文章" 
-      bindinput="onSearchInput"
+      bindinput="onInput"
       class="search-input"
     />
     <!-- 放大镜图标 -->
-    <view class="search-icon">
-      <image style="position: relative; left: 656rpx; top: -62rpx; width: 64rpx; height: 62rpx; display: inline-block; box-sizing: border-box" src="https://img.51miz.com/Element/00/79/17/29/969cb0dd_E791729_0ffb18d1.png" class="icon"/>
+    <view class="search-icon" bindtap="onSearchIconTap">
+      <image style="position: relative; left: 656rpx; top: -62rpx; width: 64rpx; height: 62rpx; display: inline-block; box-sizing: border-box" src="https://img.51miz.com/Element/00/79/17/29/969cb0dd_E791729_0ffb18d1.png" class="icon" />
     </view>
   </view>
 <scroll-view scroll-y class="fav-list">
-  <block wx:for="{{favorites}}" wx:key="id">
+  <block wx:for="{{filteredFavorites}}" wx:key="id">
     <!-- 收藏项容器 -->
     <view class="article-card" bindtap="goToDetail" data-id="{{item.id}}">
       <!-- 左边：封面图片 -->

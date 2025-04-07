@@ -65,6 +65,10 @@
 }
 
 .submit-btn[disabled] {
-  background: #e0e0e0;
-  color: #999;
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+}
+
+.preview {
+  margin: 5rpx;
 }

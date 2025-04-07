@@ -1,0 +1,90 @@
+<view class="form-container">
+  <!-- 性别 -->
+  <view class="form-section">
+    <text class="label" style="height: 81rpx; display: block; box-sizing: border-box">我的性别：</text>
+    <radio-group class="radio-group">
+      <label wx:for="{{['男生', '女生']}}" wx:key="index" class="radio-label">
+        <button class="radio-btn {{item === selectedGender ? 'selected' : ''}}" bindtap="selectGender" data-value="{{item}}" style="width: 202rpx; display: inline-block; box-sizing: border-box; left: 33rpx; top: 0rpx; position: relative; height: 66rpx">
+          {{item}}
+        </button>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 养宠经验 -->
+  <view class="form-section">
+    <text class="label">养宠经验：</text>
+    <radio-group class="radio-group">
+      <label wx:for="{{['有经验', '无经验']}}" wx:key="index" class="radio-label">
+        <button class="radio-btn {{item === selectedExperience ? 'selected' : ''}}" bindtap="selectExperience" data-value="{{item}}" style="width: 175rpx; display: inline-block; box-sizing: border-box; left: 33rpx; top: 0rpx; position: relative; height: 68rpx">
+          {{item}}
+        </button>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 婚姻状况 -->
+  <view class="form-section">
+    <text class="label">婚姻状况：</text>
+    <radio-group class="radio-group">
+      <label wx:for="{{['单身', '恋爱中', '已婚']}}" wx:key="index" class="radio-label">
+        <button class="radio-btn {{item === selectedMarriage ? 'selected' : ''}}" bindtap="selectMarriage" data-value="{{item}}" style="width: 139rpx; display: inline-block; box-sizing: border-box; left: 29rpx; top: 4rpx; position: relative">
+          {{item}}
+        </button>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 住房情况 -->
+  <view class="form-section">
+    <text class="label">住房情况：</text>
+    <radio-group class="radio-group">
+      <label wx:for="{{['自住房', '整租房', '合租']}}" wx:key="index" class="radio-label">
+        <button class="radio-btn {{item === selectedHousing ? 'selected' : ''}}" bindtap="selectHousing" data-value="{{item}}" style="width: 152rpx; display: inline-block; box-sizing: border-box; left: 29rpx; top: 0rpx; position: relative">
+          {{item}}
+        </button>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 工作状态 -->
+  <view class="form-section">
+    <text class="label">工作状态：</text>
+    <radio-group class="radio-group">
+      <label wx:for="{{['无业', '学生', '工作', '退休']}}" wx:key="index" class="radio-label">
+        <button class="radio-btn {{item === selectedWork ? 'selected' : ''}}" bindtap="selectWork" data-value="{{item}}" style="width: 112rpx; display: inline-block; box-sizing: border-box; left: 24rpx; top: 0rpx; position: relative">
+          {{item}}
+        </button>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 手机号 -->
+  <view class="form-section">
+    <text class="label">手机号：</text>
+    <input class="input-field" placeholder="输入手机号" bindinput="onPhoneInput" />
+  </view>
+
+  <!-- 地址 -->
+  <view class="form-section">
+    <text class="label">地址：</text>
+    <input class="input-field" placeholder="输入地址" bindinput="onAddressInput" />
+  </view>
+
+  <!-- 微信号 -->
+  <view class="form-section">
+    <text class="label">微信号：</text>
+    <input class="input-field" placeholder="输入微信号" bindinput="onWechatInput" />
+  </view>
+
+  <!-- 与送养人说的话 -->
+  <view class="form-section textarea-section">
+    <text class="label">与送养人说的话：</text>
+    <textarea class="textarea-field" placeholder="输入想要说的话" bindinput="onMessageInput" style="position: relative; left: 0rpx; top: -2rpx; width: 708rpx; display: block; box-sizing: border-box; height: 195rpx"></textarea>
+  </view>
+
+  <!-- 固定底部提交按钮 -->
+  <view class="fixed-bottom-submit" style="position: fixed; left: -4rpx; top: 1305rpx">
+    <button class="submit-btn" bindtap="submitForm">提交</button>
+  </view>
+</view>

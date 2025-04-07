@@ -1,0 +1,121 @@
+/* 容器样式 */
+.form-container {
+  padding: 20rpx;
+  background-color: #fff;
+  height: 100%;
+}
+
+/* 每个表单部分的样式 */
+.form-section {
+  display: flex; /* 水平排列 */
+  justify-content: space-around;
+  /* align-items: center; */
+  margin-right: 15rpx;
+  margin-bottom: 30rpx; /* 下方间距 */
+}
+
+/* 标签名字体加粗，使用宋体 */
+.label {
+  font-family: "SimSun", serif; /* 使用宋体 */
+  font-weight: bold; /* 加粗 */
+  flex: 2; 
+  line-height: 2;
+  font-size: 30rpx; /* 字体大小 */
+  color: #333; /* 字体颜色 */
+}
+
+/* 单选按钮组样式 */
+.radio-group {
+  display: flex; /* 水平排列 */
+  justify-content: flex-end; /* 右侧对齐 */
+  align-items: center; /* 垂直居中 */
+}
+
+/* 单选按钮项样式 */
+.radio-label {
+  display: inline-block; /* 允许子元素自由调整尺寸 */
+  margin-right: 10rpx; /* 按钮之间的间距 */
+}
+
+/* 单选按钮样式 */
+.radio-btn {
+  display: inline-block; /* 确保按钮尺寸独立控制 */
+  width: 202rpx; /* 固定宽度 */
+  height: 60rpx; /* 固定高度 */
+  box-sizing: border-box; left: 0rpx; top: 0rpx;
+  padding: 0; /* 移除内边距 */
+  border-radius: 30rpx; /* 圆角 */
+  font-size: 28rpx; /* 字体大小 */
+  line-height: 60rpx; /* 文字垂直居中 */
+  color: #333; /* 字体颜色 */
+  background: #f5f5f5; /* 默认背景色 */
+  text-align: center; /* 文字水平居中 */
+  transition: background 0.3s; /* 平滑过渡效果 */
+}
+
+/* 选中的单选按钮样式 */
+.radio-btn.selected {
+  background: #ff9800; /* 选中时的背景色（橙色） */
+  color: #fff; /* 选中时的字体颜色 */
+}
+
+/* 输入框样式 */
+.input-field {
+  flex: 2; /* 占据右侧空间 */
+  height: 60rpx; /* 高度 */
+  line-height: 60rpx; /* 文字垂直居中 */
+  padding: 0 20rpx; /* 内边距 */
+  text-align: right;
+  border-radius: 30rpx; /* 圆角 */
+  font-size: 28rpx; /* 字体大小 */
+}
+
+/* 与送养人说的话 */
+.form-section.textarea-section {
+  flex-direction: column; /* 垂直排列 */
+  align-items: flex-start; /* 左对齐 */
+}
+
+.textarea-field {
+  width: 100%; /* 宽度占满父容器 */
+  height: 150rpx; /* 高度 */
+  padding: 20rpx; /* 内边距 */
+  border: 2rpx solid #ccc; /* 边框 */
+  border-radius: 10rpx; /* 圆角 */
+  background: #f5f5f5; /* 浅灰色背景 */
+  font-size: 28rpx; /* 字体大小 */
+  margin-top: 10rpx; /* 与标题之间的间距 */
+}
+
+/* 固定底部提交按钮区域 */
+.fixed-bottom-submit {
+  position: fixed; /* 固定定位 */
+  bottom: 0; /* 距离底部 0 */
+  left: 0; /* 距离左侧 0 */
+  right: 0; /* 距离右侧 0 */
+  background: #fff; /* 白色背景 */
+  padding: 20rpx 0; /* 上下内边距 */
+  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+}
+
+/* 提交按钮样式 */
+.submit-btn {
+  width: 90%; /* 宽度占满页面 */
+  height: 80rpx; /* 高度 */
+  line-height: 80rpx; /* 文字垂直居中 */
+  font-size: 32rpx; /* 字体大小 */
+  border-radius: 40rpx; /* 圆角 */
+  color: #fff; /* 字体颜色 */
+  text-align: center; /* 文字居中 */
+  background: #ff9800; /* 橙色背景 */
+  margin: 0 auto; /* 居中对齐 */
+}
+
+/* 移除默认样式干扰 */
+button {
+  margin: 0; /* 移除默认外边距 */
+  padding: 0; /* 移除默认内边距 */
+  border: none; /* 移除默认边框 */
+  background: none; /* 移除默认背景 */
+  outline: none; /* 移除默认轮廓 */
+}

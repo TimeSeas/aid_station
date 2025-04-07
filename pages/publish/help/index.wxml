@@ -1,4 +1,3 @@
-<!-- 救助列表页 -->
 <view class="container">
   <scroll-view 
     scroll-y 
@@ -6,7 +5,7 @@
     bindscrolltolower="onReachBottom"
   >
     <view class="publish-btn" bindtap="goToPublish">
-      <text class="btn-text">发布求助</text>
+      <text class="btn-text">+ 发布求助</text>
     </view>
 
     <view class="rescue-list">
@@ -33,7 +32,7 @@
             </view>
             
             <view class="location">
-              <image src="/images/location.png" class="icon-small"/>
+              <image src="/images/icon/location.png" class="icon-small"/>
               <text>{{item.location}}</text>
             </view>
             
@@ -42,9 +41,8 @@
               <text>{{item.nickname}}</text>
               <text class="time">{{item.time}}</text>
             </view>
-
             <button 
-              wx:if="{{item.user_id === currentUser}}" 
+              wx:if="{{item.user_id==currentUser}}" 
               class="status-btn" 
               bindtap="toggleStatus" 
               data-id="{{item.rescue_id}}"
@@ -54,9 +52,8 @@
           </view>
         </view>
       </block>
-      
-      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
-      <view wx:else class="no-more">没有更多了~</view>
+      <view wx:if="{{!isLoading && hasMore}}" class="loading-text">加载更多...</view>
+      <view wx:if="{{!hasMore}}" class="no-more">—— 没有更多了 ——</view>
     </view>
   </scroll-view>
 </view>

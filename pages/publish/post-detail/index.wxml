@@ -1,43 +1,68 @@
+<!-- post-detail.wxml -->
 <view class="container">
-  <view class="post-content">
-    <view class="title">{{post.title}}</view>
-    <view class="author">作者：{{post.nickname}}</view>
-    <view class="full-content">{{post.content}}</view>
-    <view class="interaction">
-      <view bindtap="handleLike" data-id="{{post._id}}" data-type="post">
-        👍 {{post.likes || 0}}
-      </view>
-      <view bindtap="handleDislike" data-id="{{post._id}}" data-type="post">
-        👎 {{post.dislikes || 0}}
+  <!-- 帖子内容区域 -->
+  <view class="post-card" wx:if="{{postDetail}}">
+    <!-- 用户信息 -->
+    <view class="user-info">
+      <image class="avatar" src="{{postDetail.avatar}}"></image>
+      <text class="nickname">{{postDetail.nickname}}</text>
+    </view>
+    
+    <!-- 帖子内容 -->
+    <view class="post-content">{{postDetail.content}}</view>
+    
+    <!-- 图片展示 -->
+    <view class="grid-images" wx:if="{{postDetail.images.length}}">
+      <block wx:for="{{postDetail.images}}" wx:key="index">
+        <image class="image-item" mode="aspectFill" src="{{item}}"></image>
+      </block>
+    </view>
+    
+    <!-- 底部信息 -->
+    <view class="post-footer">
+      <text class="time">{{postDetail.post_time}}</text>
+      <view class="likes">
+        <image class="like-icon" src="/images/icon/like.png"></image>
+        <text>{{postDetail.like_count}}</text>
       </view>
     </view>
   </view>
 
-  <view class="comments">
-    <block wx:for="{{comments}}" wx:key="_id">
+  <!-- 评论列表 -->
+  <scroll-view 
+    scroll-y 
+    class="comment-list"
+    bindscrolltolower="onReachBottom"
+  >
+    <block wx:for="{{comments}}" wx:key="comment_id">
       <view class="comment-item">
-        <view class="comment-content">{{item.content}}</view>
-        <view class="comment-meta">
-          <text>{{item.nickname}}</text>
-          <view class="comment-interaction">
-            <view bindtap="handleLike" data-id="{{item._id}}" data-type="comment">
-              👍 {{item.likes || 0}}
-            </view>
-            <view bindtap="handleDislike" data-id="{{item._id}}" data-type="comment">
-              👎 {{item.dislikes || 0}}
-            </view>
+        <image class="avatar" src="{{item.avatar}}"></image>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="nickname">{{item.nickname}}</text>
+            <text class="time">{{formatTime(item.created_at)}}</text>
+            <button 
+              wx:if="{{item.user_id === currentUser.id}}"
+              class="delete-btn" 
+              bindtap="onDeleteComment" 
+              data-id="{{item.comment_id}}"
+            >删除</button>
           </view>
+          <text class="comment-text">{{item.content}}</text>
         </view>
       </view>
     </block>
-  </view>
+    <view wx:if="{{!hasMore}}" class="no-more">没有更多评论了~</view>
+  </scroll-view>
 
-  <view class="comment-input">
+  <!-- 评论输入框 -->
+  <view class="input-area">
     <input 
+      class="input" 
       placeholder="写下你的评论..." 
-      bindinput="onCommentInput" 
-      value="{{commentContent}}"
+      value="{{newContent}}"
+      bindinput="onContentInput"
     />
-    <button bindtap="submitComment">发布评论</button>
+    <button class="submit-btn" bindtap="submitComment">发送</button>
   </view>
 </view>
