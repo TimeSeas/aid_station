@@ -1,10 +1,11 @@
+const client = require('../../../../utils/request')
 Page({
   data: {
     pet: {},
     showButtons: true ,// 控制按钮是否显示
     petId: null,
     currentUserId: null
-    
+
   },
 
   onLoad(options) {
@@ -14,25 +15,21 @@ Page({
     }
       // 获取全局用户 ID
       const globalUserId = getApp().globalData.userId;
-      if (!globalUserId) {
-        wx.showToast({ title: '用户未登录', icon: 'none' });
-        return wx.navigateBack();
-      }
-    this.setData({ 
+    this.setData({
       petId: parseInt(options.id),
       currentUserId: globalUserId  // 转换为数字类型
     });
-  
+
 
     this.loadPetDetail();
-  
+
   },
 
   loadPetDetail() {
     wx.showLoading({ title: '加载中...' });
-    
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=getPetDetail',
+
+    client.request({
+      url: '/api.php?action=getPetDetail',
       data: {
         action: 'getPetDetail',
         id: this.data.petId
@@ -57,12 +54,14 @@ Page({
     });
   },
   navigateToChat() {
+    if (!getApp().requireLogin()) return;
     // 跳转到“聊一聊”页面
     wx.navigateTo({
       url: `/pages/home/square/chat/chat?masterid=${this.data.pet.created_by}` // zhur ID 参数
     });
   },
   navigateToAdoptForm() {
+    if (!getApp().requireLogin()) return;
     // 跳转到“我要领养”表单页面
     wx.navigateTo({
       url: `/pages/home/square/adoptForm/adoptForm?petId=${this.data.petId}` // 传递宠物 ID 参数

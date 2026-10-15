@@ -1,0 +1,8 @@
+<view class="page">
+  <view wx:if="{{error}}" bindtap="load">{{error}}，点击重试</view>
+  <view wx:if="{{!error && !conversations.length}}" class="empty">暂无消息。可以在宠物详情中联系发布者。</view>
+  <view class="card" wx:for="{{conversations}}" wx:key="partner_id" bindtap="openChat" data-id="{{item.partner_id}}">
+    <image src="{{item.avatar}}" mode="aspectFill"/>
+    <view class="body"><view class="title">{{item.nickname}} <text wx:if="{{item.unread_count}}">· {{item.unread_count}} 条未读</text></view><view>{{item.content}}</view><view class="time">{{item.created_at}}</view></view>
+  </view>
+</view>

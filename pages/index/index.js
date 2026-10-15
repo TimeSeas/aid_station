@@ -1,190 +1,34 @@
-// index.js
+const client = require('../../utils/request')
 Page({
-  data: {
-    currentIndex: 0,
-    tabs: ['广场', '论坛', '科普'],
-    swiperList: [
-      { image: '/images/animals/dog1.jpg' },
-      { image: '/images/animals/dog2.jpg' },
-      { image: '/images/animals/dog3.jpg' }
-    ],
-    posts: [],          // 帖子列表数据
-
-
-
-    petList: [],
-    page: 1,
-    pageSize: 10,
-    hasMore: true
+  data: { currentIndex: 0, tabs: ['广场', '论坛', '科普'], swiperList: [1, 2, 3].map(id => ({ image: `/images/animals/dog${id}.jpg` })),
+    petList: [], posts: [], page: 1, hasMore: true, isLoading: false, error: '' },
+  onShow() {
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ active: 0 })
+    this.refresh()
   },
-
-  onLoad() {
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=getpost',
-      method: 'GET',
-      success: (res) => {
-        console.log('获取动态信息成功',res.data.data); // 控制台打印数据
-        this.setData({ posts: res.data });
-      },
-      fail: (err) => {
-        console.error('请求失败', err);
-      }
-    })
-    this.loadData();
+  refresh() {
+    if (this.data.isLoading) return
+    this.setData({ petList: [], page: 1, hasMore: true, error: '' })
+    this.loadData()
+    client.call('getpost', { pageSize: 20 }).then(result => this.setData({ posts: result.data })).catch(error => this.setData({ error: error.message }))
   },
-  loadData() {
-    if (!this.data.hasMore) return;
-
-    const { page, pageSize } = this.data;
-    wx.showNavigationBarLoading();
-    
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=getPetList',
-      method: 'GET',
-      data: {
-        action: 'getPetList',
-        page,
-        pageSize
-      },
-      success: res => {
-        if (res.data.code === 0) {
-          const newList = res.data.data || [];
-          this.setData({
-            petList: [...this.data.petList, ...newList],
-            hasMore: newList.length >= pageSize
-          });
-        }
-      },
-      fail: () => {
-        wx.showToast({ title: '加载失败', icon: 'none' });
-      },
-      complete: () => {
-        wx.hideNavigationBarLoading();
-        wx.stopPullDownRefresh();
-      }
-    });
+  async loadData() {
+    if (!this.data.hasMore || this.data.isLoading) return
+    this.setData({ isLoading: true })
+    try {
+      const result = await client.call('getPetList', { page: this.data.page, pageSize: 10 })
+      this.setData({ petList: [...this.data.petList, ...result.data], page: this.data.page + 1, hasMore: result.data.length === 10, error: '' })
+    } catch (error) { this.setData({ error: error.message }) }
+    finally { this.setData({ isLoading: false }); wx.stopPullDownRefresh() }
   },
-// 跳转到详情页
-toPostDetail(e) {
-  const postId = e.currentTarget.dataset.id; // 确保这里能获取到id
-  if (!postId) {
-    wx.showToast({ title: '数据加载中...', icon: 'none' });
-    return;
-  }
-  console.log('跳转postID:', postId); 
-  wx.navigateTo({
-    url: `/pages/publish/post-detail/index?id=${postId}`  // 注意使用反引号
-  });
-},
-// // 点赞处理
-// handleLike(e) {
-//   this.updateInteraction(e, 'like');
-// },
-
-// // 差评处理
-// handleDislike(e) {
-//   this.updateInteraction(e, 'dislike');
-// },
-
-// 通用交互更新方法
-// updateInteraction(e, type) {
-//   const { id, type: targetType } = e.currentTarget.dataset;
-//   wx.request({
-//     url: 'http://118.178.92.183/api.php',
-//     method: 'POST',
-//     data: {
-//       action: type,
-//       targetId: id,
-//       targetType: targetType // 可以是post或comment
-//     },
-//     success: (res) => {
-//       const posts = this.data.posts.map(post => {
-//         if (post._id === id) {
-//           return { ...post, [type+'s']: res.data.newCount };
-//         }
-//         return post;
-//       });
-//       this.setData({ posts });
-//     }
-//   })
-// },
-  // 切换选项卡
-  switchTab(e) {
-    const index = e.currentTarget.dataset.index
-    this.setData({ currentIndex: index })
-  },
-
-  // 滑动切换
-  swiperChange(e) {
-    const current = e.detail.current
-    this.setData({ currentIndex: current })
-  },
-
-  // 点击跳转
-  onpost(){
-  },
-  onsquare_pet(){
-    wx.navigateTo({
-      url: "/pages/home/square/pet/pet"  // 请确认实际页面路径
-  });
-  },
-  onkepu(){
-    wx.navigateTo({
-      url: "/pages/knowledge/index"  // 请确认实际页面路径
-  });
-  },
-  onjiu(){
-    wx.navigateTo({
-      url: "/pages/knowledge/jiuzhu"  // 请确认实际页面路径
-  });
-},
-  onling(){
-    wx.navigateTo({
-      url: "/pages/knowledge/lingyang"  // 请确认实际页面路径
-  });
-},
-onPublishHelp() {
-  wx.navigateTo({
-      url: "/pages/publish/help/index"  // 请确认实际页面路径
-  });
-},
-onReachBottom() {
-  if (this.data.hasMore) {
-    this.setData({ page: this.data.page + 1 }, () => {
-      this.loadData();
-    });
-  }
-},
-
-onPullDownRefresh() {
-  this.setData({ petList: [], page: 1, hasMore: true }, () => {
-    this.loadData();
-  });
-}
+  switchTab(e) { this.setData({ currentIndex: Number(e.currentTarget.dataset.index) }) },
+  swiperChange(e) { this.setData({ currentIndex: e.detail.current }) },
+  toPostDetail(e) { wx.navigateTo({ url: `/pages/publish/post-detail/index?id=${e.currentTarget.dataset.id}` }) },
+  onsquare_pet() { wx.navigateTo({ url: '/pages/home/square/pet/pet' }) },
+  onkepu() { wx.navigateTo({ url: '/pages/knowledge/index' }) },
+  onjiu() { wx.navigateTo({ url: '/pages/knowledge/jiuzhu' }) },
+  onling() { wx.navigateTo({ url: '/pages/knowledge/lingyang' }) },
+  onPublishHelp() { wx.navigateTo({ url: '/pages/publish/help/index' }) },
+  onReachBottom() { this.loadData() },
+  onPullDownRefresh() { this.refresh() }
 })
-
-function sendMessage(senderId, receiverId, content) {
-  wx.request({
-    url: 'http://118.178.92.183/chat/chat_send.php',
-    method: 'POST',
-    header: {
-      'Content-Type': 'application/json'
-    },
-    data: {
-      sender_id: senderId,
-      receiver_id: receiverId,
-      content: content,
-      msg_type: 1 // 文本类型
-    },
-    success(res) {
-      if (res.data.code === 200) {
-        console.log('消息发送成功，ID:', res.data.data.msg_id);
-      } else {
-        console.error('发送失败:', res.data.msg);
-      }
-    },
-    fail(err) {
-      console.error('网络错误:', err);
-    }
-  });
-}

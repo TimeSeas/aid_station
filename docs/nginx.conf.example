@@ -1,0 +1,22 @@
+# Include inside the nginx http {} block. Adjust paths and configure TLS in
+# your hosting panel before exposing this API to a real mini program.
+limit_req_zone $binary_remote_addr zone=aid_api:10m rate=5r/s;
+server {
+    listen 127.0.0.1:8081;
+    server_name localhost;
+    root /srv/aid_station/php;
+    client_max_body_size 6m;
+    location / { return 404; }
+    location ~ ^/(api|upload|pets|publish_post|createResue|updataUser|login|register|chat_send|chat_read|chat_history|chat_conversations)\.php$ {
+        limit_req zone=aid_api burst=20 nodelay;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTP_AUTHORIZATION $http_authorization;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+    }
+    location ~ ^/uploads/(pet|post|avatar|nhpet)/[a-f0-9]{32}\.(jpg|png|gif|webp)$ {
+        add_header X-Content-Type-Options nosniff always;
+        try_files $uri =404;
+        expires 7d;
+    }
+}

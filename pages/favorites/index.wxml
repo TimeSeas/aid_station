@@ -32,14 +32,14 @@
 <!-- pages/favorites/index.wxml -->
 <view class="container">
 <view class="search-box" style="height: 83rpx; display: block; box-sizing: border-box">
-  <input 
-      placeholder="搜索收藏的文章" 
+  <input
+      placeholder="搜索收藏的文章"
       bindinput="onInput"
       class="search-input"
     />
     <!-- 放大镜图标 -->
     <view class="search-icon" bindtap="onSearchIconTap">
-      <image style="position: relative; left: 656rpx; top: -62rpx; width: 64rpx; height: 62rpx; display: inline-block; box-sizing: border-box" src="https://img.51miz.com/Element/00/79/17/29/969cb0dd_E791729_0ffb18d1.png" class="icon" />
+      <text>搜索</text>
     </view>
   </view>
 <scroll-view scroll-y class="fav-list">
@@ -48,17 +48,17 @@
     <view class="article-card" bindtap="goToDetail" data-id="{{item.id}}">
       <!-- 左边：封面图片 -->
       <image class="cover" src="{{item.coverImage}}"/>
-      
+
       <!-- 中间：标题和摘要 -->
       <view class="info">
         <text class="title">{{item.title}}</text>
         <text class="summary">{{item.summary}}</text>
       </view>
-      
+
       <!-- 右边：星星按钮 -->
-      <view 
-        class="star-btn {{item.isFavorite ? 'active' : ''}}" 
-        bindtap="toggleFavorite" 
+      <view
+        class="star-btn {{item.isFavorite ? 'active' : ''}}"
+        catchtap="toggleFavorite"
         data-id="{{item.id}}"
       >
         ★

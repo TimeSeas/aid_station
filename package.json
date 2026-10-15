@@ -1,0 +1,12 @@
+{
+  "name": "aid-station",
+  "version": "2.0.0",
+  "private": true,
+  "description": "微信流浪动物救助与领养小程序，PHP + SQLite 后端",
+  "scripts": {
+    "test": "node tests/miniprogram.test.js && node tests/api.test.js",
+    "test:frontend": "node tests/miniprogram.test.js",
+    "test:api": "node tests/api.test.js"
+  },
+  "engines": { "node": ">=20" }
+}

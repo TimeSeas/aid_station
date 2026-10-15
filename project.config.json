@@ -1,8 +1,41 @@
 {
   "compileType": "miniprogram",
-  "libVersion": "trial",
+  "libVersion": "3.7.8",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "value": "php",
+        "type": "folder"
+      },
+      {
+        "value": "var",
+        "type": "folder"
+      },
+      {
+        "value": "tests",
+        "type": "folder"
+      },
+      {
+        "value": "scripts",
+        "type": "folder"
+      },
+      {
+        "value": "docs",
+        "type": "folder"
+      },
+      {
+        "value": ".runtime",
+        "type": "folder"
+      },
+      {
+        "value": ".github",
+        "type": "folder"
+      },
+      {
+        "value": ".learnings",
+        "type": "folder"
+      }
+    ],
     "include": []
   },
   "setting": {

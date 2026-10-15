@@ -12,3 +12,13 @@ $RECYCLE.BIN/
 
 # Node.js
 node_modules/
+
+# Local credentials, runtime, uploads and personal editor settings
+.runtime/
+var/
+php/config.local.php
+php/uploads/
+project.private.config.json
+.learnings/
+*.log
+.env

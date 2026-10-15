@@ -7,17 +7,17 @@
       <image class="avatar" src="{{postDetail.avatar}}"></image>
       <text class="nickname">{{postDetail.nickname}}</text>
     </view>
-    
+
     <!-- 帖子内容 -->
     <view class="post-content">{{postDetail.content}}</view>
-    
+
     <!-- 图片展示 -->
     <view class="grid-images" wx:if="{{postDetail.images.length}}">
       <block wx:for="{{postDetail.images}}" wx:key="index">
         <image class="image-item" mode="aspectFill" src="{{item}}"></image>
       </block>
     </view>
-    
+
     <!-- 底部信息 -->
     <view class="post-footer">
       <text class="time">{{postDetail.post_time}}</text>
@@ -29,8 +29,8 @@
   </view>
 
   <!-- 评论列表 -->
-  <scroll-view 
-    scroll-y 
+  <scroll-view
+    scroll-y
     class="comment-list"
     bindscrolltolower="onReachBottom"
   >
@@ -40,11 +40,11 @@
         <view class="comment-content">
           <view class="comment-header">
             <text class="nickname">{{item.nickname}}</text>
-            <text class="time">{{formatTime(item.created_at)}}</text>
-            <button 
+            <text class="time">{{item.created_at}}</text>
+            <button
               wx:if="{{item.user_id === currentUser.id}}"
-              class="delete-btn" 
-              bindtap="onDeleteComment" 
+              class="delete-btn"
+              bindtap="onDeleteComment"
               data-id="{{item.comment_id}}"
             >删除</button>
           </view>
@@ -57,12 +57,12 @@
 
   <!-- 评论输入框 -->
   <view class="input-area">
-    <input 
-      class="input" 
-      placeholder="写下你的评论..." 
+    <input
+      class="input"
+      placeholder="写下你的评论..." maxlength="500"
       value="{{newContent}}"
       bindinput="onContentInput"
     />
-    <button class="submit-btn" bindtap="submitComment">发送</button>
+    <button class="submit-btn" disabled="{{submitting}}" bindtap="submitComment">发送</button>
   </view>
 </view>

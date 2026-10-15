@@ -1,72 +1,26 @@
-// app.js
 App({
-    //全局数据，其他页面可通过getApp().globalData获取数据
-    globalData: {
-    isAdmin: false,
-    userId: null
-    },
+  globalData: { isAdmin: false, userId: null },
   onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    const auth = wx.getStorageSync('authData')
+    if (auth && auth.token && Date.now() - auth.lastLogin < 7 * 86400000) {
+      this.globalData.userId = auth.userId
+    } else this.clearAuth()
   },
-
-  
-    genderFilter(gender) {
-      return gender === 'male' ? '公' : '母';
-    },
-  
-  login() {
- // 前端调用示例（配合微信API）
+  saveAuth(result) {
+    const userId = result.userId || result.user_id
+    wx.setStorageSync('authData', { userId, token: result.token, lastLogin: Date.now() })
+    this.globalData.userId = userId
+    this.globalData.isAdmin = false
   },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  clearAuth() {
+    wx.removeStorageSync('authData')
+    wx.removeStorageSync('userProfile')
+    this.globalData.userId = null
+    this.globalData.isAdmin = false
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  },
-  
+  requireLogin() {
+    if (this.globalData.userId) return true
+    wx.showToast({ title: '请先在“我的”页面登录', icon: 'none' })
+    return false
+  }
 })

@@ -6,7 +6,7 @@ Page({
     filteredFavorites: [], // 过滤后的收藏列表
     searchKeyword: '' // 搜索关键字
   },
-  onLoad() {
+  onShow() {
     const favorites = [];
     for (let i = 1; i <= 10; i++) {
       const article = wx.getStorageSync(`fav_${i}`);
@@ -17,9 +17,9 @@ Page({
         });
       }
     }
-    this.setData({ 
-      favorites, 
-      filteredFavorites: favorites 
+    this.setData({
+      favorites,
+      filteredFavorites: favorites
     });// 初始化列表数据
   },
   goToDetail(e) {
@@ -43,7 +43,8 @@ Page({
     }
 
     updatedFavorites[index].isFavorite = isFavorite;
-    this.setData({ favorites: updatedFavorites });
+    this.setData({ favorites: updatedFavorites.filter(item => item.isFavorite) });
+    this.onSearchIconTap();
 
     wx.showToast({ title: isFavorite ? '收藏成功' : '取消收藏' });
   },
@@ -60,6 +61,6 @@ Page({
     );
     this.setData({ filteredFavorites: filtered }); // 更新过滤后的列表
   }
-  
+
 
 });

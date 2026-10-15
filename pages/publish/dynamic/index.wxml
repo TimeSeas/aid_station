@@ -7,9 +7,9 @@
 
   <!-- 内容编辑区 -->
   <view class="editor-container">
-    <textarea 
+    <textarea
       class="content-input"
-      placeholder="分享新鲜事..."
+      placeholder="分享新鲜事..." maxlength="2000"
       value="{{content}}"
       bindinput="onContentInput"
     ></textarea>
@@ -18,7 +18,7 @@
     <view class="image-preview" wx:if="{{tempImages.length > 0}}">
       <block wx:for="{{tempImages}}" wx:key="index">
         <view class="preview-item">
-          <image 
+          <image
             class="preview-image"
             src="{{item}}"
             mode="aspectFill"
@@ -32,12 +32,6 @@
   <view class="toolbar">
     <view class="tool-item" bindtap="chooseImage">
       <image class="icon" src="/images/icon/uploadImage.png" />上传图片
-    </view>
-    <view class="tool-item">
-      <image class="icon" src="/images/icon/对话.png" />话题
-    </view>
-    <view class="tool-item">
-      <image class="icon" src="/images/icon/location.png" />位置
     </view>
     <view class="word-count">{{2000 - content.length}}/2000</view>
   </view>

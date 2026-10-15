@@ -7,3 +7,4 @@
   </view>
   <button class="submit-btn" bindtap="handleLogin">立即登录</button>
 </view>
+<navigator url="/pages/myhome/register-form/register-form">还没有账号？立即注册</navigator>

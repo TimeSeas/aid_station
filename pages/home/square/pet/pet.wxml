@@ -1,19 +1,20 @@
 <!-- pages\home\square\pet\pet.wxml -->
 <view class="container">
-  <scroll-view 
-    scroll-y 
-    class="scroll-view" 
+<view wx:if="{{error}}" bindtap="onPullDownRefresh">{{error}}，点击重试</view>
+  <scroll-view
+    scroll-y
+    class="scroll-view"
     bindscrolltolower="onReachBottom"
   >
     <view class="pet-list">
       <block wx:for="{{petList}}" wx:key="pet_id">
-        <navigator 
-          url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}" 
+        <navigator
+          url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}"
           class="pet-item"
         >
-          <image 
-            src="{{item.cover || '/images/default-pet.png'}}" 
-            mode="aspectFill" 
+          <image
+            src="{{item.cover || '/images/animals/dog1.jpg'}}"
+            mode="aspectFill"
             class="pet-cover"
             lazy-load="true"
           />

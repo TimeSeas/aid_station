@@ -1,3 +1,4 @@
+const client = require('../../../../utils/request')
 Page({
   data: {
     selectedGender: '', // 当前选中的性别
@@ -10,6 +11,7 @@ Page({
     wechat: '', // 微信号
     message: '' // 留言
   },
+  onLoad(options) { this.setData({ petId: Number(options.petId) }) },
   selectGender(e) {
     this.setData({ selectedGender: e.currentTarget.dataset.value });
   },
@@ -38,20 +40,24 @@ Page({
     this.setData({ message: e.detail.value });
   },
   submitForm() {
+    if (this.data.isSubmitting || !getApp().requireLogin()) return;
+    this.setData({ isSubmitting: true });
     const { selectedGender, selectedExperience, selectedMarriage, selectedHousing, selectedWork, phone, address, wechat, message } = this.data;
 
     // 验证必填字段
     if (!selectedGender || !selectedExperience || !selectedMarriage || !selectedHousing || !selectedWork || !phone || !address || !wechat || !message) {
+      this.setData({ isSubmitting: false });
       wx.showToast({ title: '请填写完整信息', icon: 'none' });
       return;
     }
 
     // 新增：发送数据到后端
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=submitAdoptionInfo',
+    client.request({
+      url: '/api.php?action=submitAdoptionInfo',
       method: 'POST',
       header: { 'Content-Type': 'application/json' },
       data: {
+        pet_id: this.data.petId,
         gender: selectedGender,
         experience: selectedExperience,
         marriage: selectedMarriage,
@@ -64,31 +70,18 @@ Page({
       },
       success: (res) => {
         if (res.data.code === 200) {
-          wx.showToast({ title: '提交成功', icon: 'success' });
+          wx.showToast({ title: '申请已提交', icon: 'success' });
+          setTimeout(() => wx.navigateBack(), 800);
         } else {
           wx.showToast({ title: res.data.message || '提交失败', icon: 'none' });
         }
       },
+      complete: () => this.setData({ isSubmitting: false }),
       fail: (err) => {
         console.error('网络错误:', err);
         wx.showToast({ title: '网络异常，请重试', icon: 'none' });
       }
     });
-    
-    // 提交数据（示例：打印到控制台）
-    console.log('提交的数据:', {
-      gender: selectedGender,
-      experience: selectedExperience,
-      marriage: selectedMarriage,
-      housing: selectedHousing,
-      work: selectedWork,
-      phone,
-      address,
-      wechat,
-      message
-    });
 
-    // 模拟提交成功
-    wx.showToast({ title: '提交成功', icon: 'success' });
   }
 });

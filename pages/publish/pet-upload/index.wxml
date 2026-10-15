@@ -45,6 +45,6 @@
       </view>
     </view>
 
-    <button formType="submit" class="submit-btn" bind:tap="formSubmit">提交登记</button>
+    <button formType="submit" class="submit-btn" disabled="{{isSubmitting}}" loading="{{isSubmitting}}">提交登记</button>
   </form>
 </view>

@@ -1,123 +1,23 @@
-<!-- index.wxml -->
-<view class="container">
-  <!-- 轮播图区域 -->
-  <swiper class="swiper" autoplay interval="3000" indicator-dots indicator-color="#eee" indicator-active-color="#ff9000">
-    <swiper-item wx:for="{{swiperList}}" wx:key="index">
-      <image src="{{item.image}}" mode="aspectFill" class="swiper-image"/>
-    </swiper-item>
+<view class="home">
+  <view class="hero"><text class="eyebrow">AID STATION · 暖爪救助站</text><view class="headline">让每一次相遇，<text>都有温暖的归处。</text></view><view class="intro">认识一位新伙伴，记录一份善意。</view></view>
+  <swiper class="banner" autoplay interval="5000" indicator-dots indicator-active-color="#30745a">
+    <swiper-item wx:for="{{swiperList}}" wx:key="index"><image src="{{item.image}}" mode="aspectFill"/></swiper-item>
   </swiper>
-
-  <!-- 导航选项卡 -->
-  <view class="nav-tabs">
-    <scroll-view scroll-x class="scroll-x">
-      <view class="tabs-container">
-        <block wx:for="{{tabs}}" wx:key="index">
-          <view 
-            class="tab-item {{currentIndex === index ? 'active' : ''}}" 
-            bindtap="switchTab" 
-            data-index="{{index}}"
-          >
-            {{item}}
-          </view>
-        </block>
-      </view>
-    </scroll-view>
+  <view class="rescue-entry" bindtap="onPublishHelp"><view><view class="entry-title">身边的生命，需要你的帮助</view><text>查看救助需求与最新进展</text></view><text>→</text></view>
+  <view class="nav-tabs"><view wx:for="{{tabs}}" wx:key="index" class="tab {{currentIndex === index ? 'active' : ''}}" bindtap="switchTab" data-index="{{index}}">{{item}}</view></view>
+  <view wx:if="{{error}}" class="notice" bindtap="refresh">{{error}} · 点击重试</view>
+  <view wx:if="{{currentIndex === 0}}" class="pet-list">
+    <navigator wx:for="{{petList}}" wx:key="pet_id" url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}" class="pet-card">
+      <image src="{{item.cover || '/images/animals/dog1.jpg'}}" mode="aspectFill"/>
+      <view class="pet-info"><view class="pet-name">{{item.name}}<text class="badge">待领养</text></view><text class="pet-meta">{{item.species}} · {{item.age}}个月</text></view>
+    </navigator>
+    <view wx:if="{{!petList.length && !isLoading && !error}}" class="empty">暂时没有待领养的伙伴</view>
+    <view wx:if="{{hasMore && !error}}" class="more" bindtap="loadData">{{isLoading ? '加载中…' : '加载更多'}}</view>
   </view>
-
-  <!-- 内容区域 -->
-  <swiper 
-    class="content-swiper" 
-    current="{{currentIndex}}" 
-    duration="300" 
-    bindchange="swiperChange"
-  >
-    <!-- 广场 -->
-    <swiper-item>
-      <!-- <scroll-view scroll-y class="content-scroll"> -->
-        <!-- 广场内容 -->
-        <!-- <view class="content-item " bind:tap="onsquare_pet">最新待领养宠物信息</view> -->
-        <!-- <view class="content-item" bind:tap="onPublishHelp">紧急救助需求</view> -->
-        <!-- <view class="content-item">志愿者招募</view> 动态内容 -->
-        <!-- <view class="content-item" bindtap="onpost">救助站日常动态</view> -->
-        <!-- <view class="content-item">成功救助案例</view> -->
-        <!-- <view class="content-item">领养后续故事</view> -->
-        <!-- 基于网页1的小程序列表结构优化 -->
-<view class="container">
-  <scroll-view 
-    scroll-y 
-    class="scroll-view" 
-    bindscrolltolower="onReachBottom"
-  >
-    <view class="pet-list">
-      <block wx:for="{{petList}}" wx:key="pet_id">
-        <navigator 
-          url="/pages/home/square/pet_detaill/pet_detaill?id={{item.pet_id}}" 
-          class="pet-item"
-        >
-          <image 
-            src="{{item.cover || '/images/default-pet.png'}}" 
-            mode="aspectFill" 
-            class="pet-cover"
-            lazy-load="true"
-          />
-          <view class="info-box">
-            <view class="title-line">
-              <text class="name">{{item.name}}</text>
-              <view class="status {{item.is_adopted ? 'adopted' : ''}}">
-                {{item.is_adopted ? '已领养' : '待领养'}}
-              </view>
-            </view>
-            <view class="meta-line">
-              <text class="species">{{item.species}}</text>
-              <text class="age">{{item.age}}月</text>
-            </view>
-          </view>
-        </navigator>
-      </block>
-      <view wx:if="{{hasMore}}" class="loading-text">加载中...</view>
-      <view wx:else class="no-more">没有更多了~</view>
-    </view>
-  </scroll-view>
-</view>
-      <!-- </scroll-view> -->
-    </swiper-item>
-
-    <!-- 论坛 -->
-  <!-- 论坛 -->
-    <swiper-item>
-      <!-- 帖子列表 -->
-      <view class="post-list">
-        <block wx:for="{{posts.data}}" wx:key="_id">
-          <view class="post-item" bindtap="toPostDetail" data-id="{{item.post_id}}">
-            <view class="title">{{item.title}}</view>
-            <view class="content-preview">
-              {{item.content.length > 50 ? item.content.substring(0, 50) + '...' : item.content}}
-              <text wx:if="{{item.content.length > 50}}" class="view-more">点击查看全文</text>
-            </view>
-            <view class="meta">
-              <text>作者：{{item.nickname}}</text>
-              <view class="interaction">
-                <view class="like" bindtap="handleLike" data-id="{{item._id}}" data-type="post">
-                  👍 {{item.likes || 0}}
-                </view>
-                <view class="dislike" bindtap="handleDislike" data-id="{{item._id}}" data-type="post">
-                  👎 {{item.dislikes || 0}}
-                </view>
-              </view>
-            </view>
-          </view>
-        </block>
-      </view>
-    </swiper-item>
-
-    <!-- 科普 -->
-    <swiper-item>
-      <scroll-view scroll-y class="content-scroll">
-        <!-- 科普内容 -->
-        <view class="content-item"  bindtap="onkepu">生存现状</view>
-        <view class="content-item" bindtap="onjiu">救助指南</view>
-        <view class="content-item" bindtap="onling">领养知识</view>
-      </scroll-view>
-    </swiper-item>
-  </swiper>
+  <view wx:if="{{currentIndex === 1}}" class="post-list">
+    <view wx:for="{{posts}}" wx:key="post_id" class="post-card" bindtap="toPostDetail" data-id="{{item.post_id}}"><view class="post-author"><image src="{{item.avatar}}"/><text>{{item.nickname}}</text></view><view class="post-content">{{item.content}}</view><image wx:if="{{item.images.length}}" class="post-cover" src="{{item.images[0]}}" mode="aspectFill"/><text class="pet-meta">{{item.post_time}} · 查看动态与评论 →</text></view>
+    <view wx:if="{{!posts.length && !error}}" class="empty">暂无动态，点击下方加号分享一份善意。</view>
+  </view>
+  <view wx:if="{{currentIndex === 2}}" class="knowledge-list"><view class="knowledge-card" bindtap="onkepu"><text>01</text><view>认识流浪动物<view class="pet-meta">从了解开始，让关爱更有方向</view></view><text>→</text></view><view class="knowledge-card" bindtap="onjiu"><text>02</text><view>救助指南<view class="pet-meta">遇见需要帮助的动物时</view></view><text>→</text></view><view class="knowledge-card" bindtap="onling"><text>03</text><view>领养知识<view class="pet-meta">为长期陪伴做好准备</view></view><text>→</text></view></view>
+  <view class="footer">以领养代替购买，以陪伴回应信任。</view>
 </view>

@@ -70,6 +70,7 @@ Component({
       const el = this.data.list[index]
       const url = el.path
       if (el.isPublishBtn) {
+        if (!getApp().requireLogin()) return;
         this.setData({
           maskState: true
         })
@@ -90,7 +91,7 @@ Component({
   onPublishHelp() {
       this.closeMask();
       wx.navigateTo({
-          url: "/pages/publish/help/index"  // 请确认实际页面路径
+          url: "/pages/rescue/publish/publish"  // 请确认实际页面路径
       });
   },
 

@@ -1,0 +1,19 @@
+<view class="page">
+  <view wx:if="{{error}}" bindtap="load">{{error}}，点击重试</view>
+  <view wx:if="{{!error && !applications.length}}" class="empty">暂无领养申请。在宠物详情中可以提交申请。</view>
+  <view class="card" wx:for="{{applications}}" wx:key="application_id">
+    <view class="title">{{item.pet_name}} · {{item.label}}</view>
+    <view>{{item.created_by === currentUser ? '收到的申请' : '我的申请'}} · {{item.created_at}}</view>
+    <view>养宠经验：{{item.details.experience}}</view>
+    <view>住房情况：{{item.details.housing}}</view>
+    <view>工作情况：{{item.details.work}}</view>
+    <view>联系电话：{{item.details.phone}}</view>
+    <view>微信：{{item.details.wechat}}</view>
+    <view>地址：{{item.details.address}}</view>
+    <view>留言：{{item.details.message}}</view>
+    <view wx:if="{{item.created_by === currentUser && item.status === 'pending'}}" class="actions">
+      <button size="mini" bindtap="review" data-id="{{item.application_id}}" data-status="approved">通过</button>
+      <button size="mini" bindtap="review" data-id="{{item.application_id}}" data-status="rejected">拒绝</button>
+    </view>
+  </view>
+</view>

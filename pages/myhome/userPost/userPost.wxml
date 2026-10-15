@@ -1,27 +1,27 @@
 <view class="container">
-  <!-- 加载状态 -->
+
   <view wx:if="{{isLoading}}" class="loading">加载中...</view>
 
-  <!-- 动态列表 -->
+
   <block  wx:for="{{posts}}" wx:key="post_id">
   <view class="post-item" bindtap="toPostDetail" data-id="{{item.post_id}}">
-    <!-- 用户信息 -->
+
     <view class="user-info">
       <image src="{{item.avatar}}" class="avatar"></image>
       <text class="nickname">{{item.nickname}}</text>
     </view>
 
-    <!-- 动态内容 -->
+
     <view class="post-content">{{item.content}}</view>
 
-    <!-- 图片展示 -->
+
     <view wx:if="{{item.images.length}}" class="image-container">
       <block wx:for="{{item.images}}" wx:key="index">
         <image src="{{item}}" mode="aspectFill" class="post-image"></image>
       </block>
     </view>
 
-    <!-- 底部信息 -->
+
     <view class="post-footer">
       <text class="post-time">{{item.post_time}}</text>
       <view class="like">
@@ -31,30 +31,9 @@
     </view>
   </view>
 </block>
-      <!-- 帖子列表 -->
-      <!-- <view class="post-list">
-        <block wx:for="{{posts.data}}" wx:key="_id">
-          <view class="post-item" bindtap="toPostDetail" data-id="{{item.post_id}}">
-            <view class="title">{{item.title}}</view>
-            <view class="content-preview">
-              {{item.content.length > 50 ? item.content.substring(0, 50) + '...' : item.content}}
-              <text wx:if="{{item.content.length > 50}}" class="view-more">点击查看全文</text>
-            </view>
-            <view class="meta">
-              <text>作者：{{item.nickname}}</text>
-              <view class="interaction">
-                <view class="like" bindtap="handleLike" data-id="{{item._id}}" data-type="post">
-                  👍 {{item.likes || 0}}
-                </view>
-                <view class="dislike" bindtap="handleDislike" data-id="{{item._id}}" data-type="post">
-                  👎 {{item.dislikes || 0}}
-                </view>
-              </view>
-            </view>
-          </view>
-        </block>
-      </view> -->
-  <!-- 无数据提示 -->
+
+
+
   <view wx:if="{{!isLoading && posts.length === 0}}" class="empty">
     该用户还没有发布动态
   </view>

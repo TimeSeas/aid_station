@@ -1,91 +1,31 @@
+const client = require('../../../utils/request')
 Page({
-  data: {
-    rescueList: [],
-    page: 1,
-    pageSize: 10,
-    hasMore: true,
-    currentUser: null,
-    isLoading: false
+  data: { rescueList: [], page: 1, hasMore: true, currentUser: null, isLoading: false, error: '' },
+  onShow() { this.onPullDownRefresh() },
+  async loadData() {
+    if (!this.data.hasMore || this.data.isLoading) return
+    this.setData({ isLoading: true })
+    try {
+      const result = await client.call('getRescueList', { page: this.data.page })
+      this.setData({ rescueList: [...this.data.rescueList, ...result.data], page: this.data.page + 1, hasMore: result.pageInfo.hasMore, error: '' })
+    } catch (error) { this.setData({ error: error.message }) }
+    finally { this.setData({ isLoading: false }); wx.stopPullDownRefresh() }
   },
-
-  onLoad() {
-    this.getCurrentUser();
-    this.loadData();
+  async toggleStatus(e) {
+    const item = this.data.rescueList.find(row => row.rescue_id === e.currentTarget.dataset.id)
+    if (!item || this.updating) return
+    this.updating = true
+    try {
+      await client.call('updateRescueStatus', { rescue_id: item.rescue_id, status: item.status ? 0 : 1 }, 'POST')
+      this.setData({ rescueList: this.data.rescueList.map(row => row.rescue_id === item.rescue_id ? { ...row, status: item.status ? 0 : 1 } : row) })
+    } catch (error) { wx.showToast({ title: error.message, icon: 'none' }) }
+    finally { this.updating = false }
   },
-
-  getCurrentUser() {
-    const authData = wx.getStorageSync('authData');
-    this.setData({ currentUser: authData.userId });
-  },
-
-  loadData() {
-    if (!this.data.hasMore || this.data.isLoading) return;
-    
-    this.setData({ isLoading: true });
-    const { page, pageSize } = this.data;
-    const url = `http://118.178.92.183/api.php?action=getRescueList&page=${page}&pageSize=${pageSize}`;
-
-    wx.showNavigationBarLoading();
-    wx.request({
-      url: url,
-      method: 'GET',
-      success: res => {
-        if (res.data.code === 0) {
-          const newList = res.data.data || [];
-          this.setData({
-            rescueList: [...this.data.rescueList, ...newList],
-            hasMore: newList.length >= pageSize
-          });
-        }
-      },
-      complete: () => {
-        this.setData({ isLoading: false });
-        wx.hideNavigationBarLoading();
-        wx.stopPullDownRefresh();
-      }
-    });
-  },
-
-  toggleStatus(e) {
-    const rescueId = e.currentTarget.dataset.id;
-    const item = this.data.rescueList.find(v => v.rescue_id === rescueId);
-    if (!item) return;
-
-    const newStatus = item.status ? 0 : 1;
-    wx.showLoading({ title: '处理中' });
-    
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=updateRescueStatus',
-      method: 'POST',
-      data: {
-        rescue_id: rescueId,
-        status: newStatus,
-        user_id: this.data.currentUser
-      },
-      success: res => {
-        if (res.data.code === 0) {
-          const list = this.data.rescueList.map(v => {
-            if (v.rescue_id === rescueId) v.status = newStatus;
-            return v;
-          });
-          this.setData({ rescueList: list });
-        }
-      },
-      complete: wx.hideLoading
-    });
-  },
-
-  goToPublish() {
-    wx.navigateTo({ url: '/pages/rescue/publish/publish' });
-  },
-
-  onReachBottom() {
-    if (this.data.hasMore) {
-      this.setData({ page: this.data.page + 1 }, this.loadData);
-    }
-  },
-
+  goToPublish() { if (getApp().requireLogin()) wx.navigateTo({ url: '/pages/rescue/publish/publish' }) },
+  onReachBottom() { this.loadData() },
   onPullDownRefresh() {
-    this.setData({ rescueList: [], page: 1, hasMore: true }, this.loadData);
+    if (this.data.isLoading) return
+    this.setData({ rescueList: [], page: 1, hasMore: true, currentUser: getApp().globalData.userId })
+    this.loadData()
   }
-});
+})

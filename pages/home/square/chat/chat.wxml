@@ -7,12 +7,12 @@
       <text class="header-title">{{recipientInfo.nickname}}</text>
       <text class="unread-count" wx:if="{{unreadCount > 0}}">({{unreadCount}})</text>
     </view>
-    
+
   </view>
 
   <!-- 消息列表 -->
-  <scroll-view class="chat-messages" scroll-y>
-    <view class="message" wx:for="{{messages}}" wx:key="index">
+  <scroll-view class="chat-messages" scroll-y scroll-into-view="{{scrollTarget}}">
+    <view id="msg-{{index}}" class="message" wx:for="{{messages}}" wx:key="index">
       <view class="message-bubble {{item.isUser ? 'user-bubble' : 'admin-bubble'}}">
         <image src="{{item.avatarUrl}}" class="avatar"></image>
         <view class="bubble-content">{{item.content}}</view>
@@ -23,6 +23,6 @@
   <!-- 底部输入框 -->
   <view class="chat-input" style="height: 141rpx; display: flex; box-sizing: border-box">
     <input style="height: 60rpx; display: block; box-sizing: border-box" placeholder="请输入消息" value="{{inputValue}}" bindinput="onInput" />
-    <button class="send-btn" bindtap="SendMessage" style="width: 164rpx; display: block; box-sizing: border-box; left: 0rpx; top: 0rpx; line-height: 40rpx">发送</button>
+    <button class="send-btn" disabled="{{sending}}" bindtap="SendMessage" style="width: 164rpx; display: block; box-sizing: border-box; left: 0rpx; top: 0rpx; line-height: 40rpx">发送</button>
   </view>
 </view>

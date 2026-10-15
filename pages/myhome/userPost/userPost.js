@@ -1,3 +1,4 @@
+const client = require('../../../utils/request')
 Page({
   data: {
     posts: [],
@@ -14,9 +15,9 @@ Page({
   loadUserPosts: function() {
     const that = this;
     this.setData({ isLoading: true });
-    
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=getuserpost',
+
+    client.request({
+      url: '/api.php?action=getuserpost',
       data: {
         user_id: this.data.userId
       },
@@ -40,7 +41,7 @@ Page({
       wx.showToast({ title: '数据加载中...', icon: 'none' });
       return;
     }
-    console.log('跳转postID:', postId); 
+    console.log('跳转postID:', postId);
     wx.navigateTo({
       url: `/pages/publish/post-detail/index?id=${postId}`  // 注意使用反引号
     });

@@ -1,60 +1,16 @@
-// 基于网页1的分页逻辑增强
+const client = require('../../../../utils/request')
 Page({
-  data: {
-    petList: [],
-    page: 1,
-    pageSize: 10,
-    hasMore: true
+  data: { petList: [], page: 1, hasMore: true, isLoading: false, error: '' },
+  onShow() { this.onPullDownRefresh() },
+  async loadData() {
+    if (!this.data.hasMore || this.data.isLoading) return
+    this.setData({ isLoading: true })
+    try {
+      const result = await client.call('getPetList', { page: this.data.page })
+      this.setData({ petList: [...this.data.petList, ...result.data], page: this.data.page + 1, hasMore: result.data.length === 10, error: '' })
+    } catch (error) { this.setData({ error: error.message }) }
+    finally { this.setData({ isLoading: false }); wx.stopPullDownRefresh() }
   },
-
-  onLoad() {
-    this.loadData();
-  },
-
-  loadData() {
-    if (!this.data.hasMore) return;
-
-    const { page, pageSize } = this.data;
-    wx.showNavigationBarLoading();
-    
-    wx.request({
-      url: 'http://118.178.92.183/api.php?action=getPetList',
-      method: 'GET',
-      data: {
-        action: 'getPetList',
-        page,
-        pageSize
-      },
-      success: res => {
-        if (res.data.code === 0) {
-          const newList = res.data.data || [];
-          this.setData({
-            petList: [...this.data.petList, ...newList],
-            hasMore: newList.length >= pageSize
-          });
-        }
-      },
-      fail: () => {
-        wx.showToast({ title: '加载失败', icon: 'none' });
-      },
-      complete: () => {
-        wx.hideNavigationBarLoading();
-        wx.stopPullDownRefresh();
-      }
-    });
-  },
-
-  onReachBottom() {
-    if (this.data.hasMore) {
-      this.setData({ page: this.data.page + 1 }, () => {
-        this.loadData();
-      });
-    }
-  },
-
-  onPullDownRefresh() {
-    this.setData({ petList: [], page: 1, hasMore: true }, () => {
-      this.loadData();
-    });
-  }
+  onReachBottom() { this.loadData() },
+  onPullDownRefresh() { if (this.data.isLoading) return; this.setData({ petList: [], page: 1, hasMore: true }); this.loadData() }
 })

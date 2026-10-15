@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/mypage/mypage",
     "pages/index/index",
+    "pages/mypage/mypage",
     "pages/logs/logs",
     "pages/publish/pet-upload/index",
     "pages/publish/dynamic/index",
@@ -21,7 +21,9 @@
     "pages/home/square/pet_detaill/pet_detaill",
     "pages/home/square/chat/chat",
     "pages/home/square/adoptForm/adoptForm",
-    "pages/rescue/publish/publish"
+    "pages/rescue/publish/publish",
+    "pages/adoptions/index",
+    "pages/messages/index"
   ],
   "window": {
     "enablePullDownRefresh": true,

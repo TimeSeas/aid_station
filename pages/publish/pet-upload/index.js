@@ -1,147 +1,22 @@
-// pages/admin/pet-upload/index.js
-const app = getApp()
-
+const client = require('../../../utils/request')
 Page({
-  data: {
-    speciesList: ['犬类', '猫类', '兔类', '其他'],
-    speciesIndex: 0,
-    genderList: [
-      { name: '公', value: 1 },
-      { name: '母', value: 2 },
-      { name: '未知', value: 0 }
-    ],
-    tempImages: [],
-    isSubmitting: false
-  },
-
-  onLoad() {
-  },
-  speciesChange(e) {
-    this.setData({
-      speciesIndex: e.detail.value
-    })
-  },
+  data: { speciesList: ['犬类', '猫类', '兔类', '其他'], speciesIndex: 0,
+    genderList: [{ name: '公', value: 1 }, { name: '母', value: 2 }, { name: '未知', value: 0, checked: true }], tempImages: [], isSubmitting: false },
+  speciesChange(e) { this.setData({ speciesIndex: Number(e.detail.value) }) },
   chooseImage() {
-    if (this.data.tempImages.length >= 6) {
-      wx.showToast({ title: '最多上传6张图片', icon: 'none' })
-      return
-    }
-    wx.chooseMedia({
-      count: 6 - this.data.tempImages.length,
-      sizeType: ['compressed'],
-      success: res => {
-        const newPaths = res.tempFiles.map(file => file.tempFilePath)
-        this.setData({ 
-          tempImages: [...this.data.tempImages, ...newPaths]
-        })
-      },
-      fail: err => {
-        console.error('选择图片失败:', err)
-      }
-    })
+    wx.chooseMedia({ count: 6 - this.data.tempImages.length, mediaType: ['image'], sizeType: ['compressed'],
+      success: res => this.setData({ tempImages: [...this.data.tempImages, ...res.tempFiles.map(file => file.tempFilePath)] }) })
   },
-
-  validateForm(formData = {}) { // 添加默认值
-    if (!formData.name?.trim()) {
-      wx.showToast({ title: '请填写名称', icon: 'none' })
-      return false
-    }
-     // 检查是否有图片
-     if (this.data.tempImages.length === 0) {
-      wx.showToast({ title: '请至少上传一张图片', icon: 'none' });
-      return false;
-    }
-    return true
-  },
-
-  async uploadImages() {
+  async formSubmit(e) {
+    if (this.data.isSubmitting || !getApp().requireLogin()) return
+    const form = e.detail.value
+    if (!form.name.trim() || !this.data.tempImages.length) return wx.showToast({ title: '请填写名称并上传照片', icon: 'none' })
+    this.setData({ isSubmitting: true }); wx.showLoading({ title: '提交中' })
     try {
-      const uploadTasks = this.data.tempImages.map(path => 
-        new Promise((resolve, reject) => {
-          wx.uploadFile({
-            url: 'http://118.178.92.183/upload.php?type=pet',
-            filePath: path,
-            name: 'image',
-            success: (res) => {
-              console.log('上传响应:', res.data); // 打印原始响应
-              const response = JSON.parse(res.data);
-              resolve(response.url); 
-            },
-            fail: (err) => {
-              console.error('上传失败详情:', err); 
-              reject(err)
-            }
-          })
-        })
-      )
-
-      const results = await Promise.all(uploadTasks)
-      const validPaths = results.filter(Boolean)
-      if (validPaths.length === 0) throw new Error('所有图片上传失败')
-      return validPaths
-    } catch (error) {
-      wx.showToast({ title: error.message, icon: 'none' })
-      throw error
-    }
-  },
-
-  formSubmit(e) {
-    const user = wx.getStorageSync('authData');
-    
-    if (!user) {
-      wx.showToast({ title: '请先登录', icon: 'none' });
-      return;
-    }
-   console.log('[表单数据]', e.detail.value); // 检查实际收到的数据
-    if (this.data.isSubmitting) return;
-    this.setData({ isSubmitting: true });
-    
-    // 添加空对象保护
-    const formData = e.detail.value || {}; 
-    
-    if (!this.validateForm(formData)) {
-      this.setData({ isSubmitting: false });
-      return;
-    }
-
-    wx.showLoading({ title: '提交中...' })
-
-    this.uploadImages()
-      .then(photoPaths => {
-        this.submitPetInfo({
-          ...formData,
-          species: this.data.speciesList[this.data.speciesIndex],
-          photos: photoPaths,
-          created_by: app.globalData.userId
-        })
-      })
-      .catch(() => wx.hideLoading())
-      .finally(() => this.setData({ isSubmitting: false }))
-  },
-
-  submitPetInfo(petData) {
-    wx.request({
-      url: 'http://118.178.92.183/pets.php',
-      method: 'POST',
-      header: {
-        'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${wx.getStorageSync('token')}`
-      },
-      data: petData,
-      success: res => {
-        wx.hideLoading()
-        if (res.data.code === 200) {
-          wx.showToast({ title: '登记成功' })
-          setTimeout(() => wx.navigateBack(), 1500)
-        } else {
-          wx.showToast({ title: res.data.msg || '提交失败', icon: 'none' })
-        }
-      },
-      fail: err => {
-        wx.hideLoading()
-        wx.showToast({ title: '网络请求失败', icon: 'none' })
-        console.error('API请求失败:', err)
-      }
-    })
+      const photos = await Promise.all(this.data.tempImages.map(path => client.upload(path, 'pet').then(result => result.url)))
+      await client.call('createPet', { ...form, species: this.data.speciesList[this.data.speciesIndex], gender: Number(form.gender), age: Number(form.age), photos }, 'POST')
+      wx.navigateBack()
+    } catch (error) { wx.showToast({ title: error.message, icon: 'none' }) }
+    finally { wx.hideLoading(); this.setData({ isSubmitting: false }) }
   }
 })

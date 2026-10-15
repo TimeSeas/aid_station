@@ -1,7 +1,8 @@
 <view class="container">
-  <scroll-view 
-    scroll-y 
-    class="scroll-view" 
+<view wx:if="{{error}}" bindtap="onPullDownRefresh">{{error}}，点击重试</view>
+  <scroll-view
+    scroll-y
+    class="scroll-view"
     bindscrolltolower="onReachBottom"
   >
     <view class="publish-btn" bindtap="goToPublish">
@@ -11,9 +12,9 @@
     <view class="rescue-list">
       <block wx:for="{{rescueList}}" wx:key="rescue_id">
         <view class="rescue-item">
-          <swiper 
-            class="image-swiper" 
-            indicator-dots="{{true}}" 
+          <swiper
+            class="image-swiper"
+            indicator-dots="{{true}}"
             autoplay="{{false}}"
           >
             <block wx:for="{{item.images}}" wx:key="*this">
@@ -22,7 +23,7 @@
               </swiper-item>
             </block>
           </swiper>
-          
+
           <view class="info-box">
             <view class="header">
               <text class="name">{{item.name}}</text>
@@ -30,21 +31,21 @@
                 {{item.status ? '已救助' : '待救助'}}
               </view>
             </view>
-            
+
             <view class="location">
               <image src="/images/icon/location.png" class="icon-small"/>
               <text>{{item.location}}</text>
             </view>
-            
+
             <view class="user-info">
               <image src="{{item.avatar}}" class="avatar"/>
               <text>{{item.nickname}}</text>
               <text class="time">{{item.time}}</text>
             </view>
-            <button 
-              wx:if="{{item.user_id==currentUser}}" 
-              class="status-btn" 
-              bindtap="toggleStatus" 
+            <button
+              wx:if="{{item.user_id==currentUser}}"
+              class="status-btn"
+              bindtap="toggleStatus"
               data-id="{{item.rescue_id}}"
             >
               {{item.status ? '标记为未救助' : '标记为已救助'}}

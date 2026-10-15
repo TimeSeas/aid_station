@@ -1,6 +1,6 @@
 /* custom-tab-bar/index.wxss */
 
-@import "/components/iconfont/iconfont.wxss";
+@import "../components/iconfont/iconfont.wxss";
 
 .tab-bar {
   height: 52px;
