@@ -58,7 +58,7 @@ async function run() {
   app.saveAuth({ userId: 8, token: 'session' })
   wx.request = options => {
     assert.equal(options.header.Authorization, 'Bearer session')
-    assert.equal(options.url, 'http://127.0.0.1:8080/api.php?action=getAdoptions')
+    assert.equal(options.url, 'http://127.0.0.1:8082/api.php?action=getAdoptions')
     options.success({ statusCode: 401, data: { code: 401 } })
   }
   await assert.rejects(client.call('getAdoptions'))

@@ -4,6 +4,29 @@
 
 这个项目由原有小程序修复而来。当前版本以「下载后能复现、核心流程有验证、便于作品集讲解」为目标：移除了对旧服务器的依赖，补齐本地数据库、账号体系、领养申请审核、图片上传与权限控制。
 
+## 运行截图
+
+2026-10-15 在微信开发者工具中实际运行，连接本地 PHP + SQLite 服务。以下截图使用演示账号与示例数据，仅裁剪模拟器区域，未重绘页面。
+
+<table>
+  <tr>
+    <th>首页 · 待领养广场</th>
+    <th>宠物详情 · 领养与沟通入口</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/home.png" width="280" alt="实际运行的首页和待领养宠物列表"></td>
+    <td><img src="docs/screenshots/pet-detail.png" width="280" alt="宠物详情、健康信息和领养入口"></td>
+  </tr>
+  <tr>
+    <th>救助需求 · 查看进展</th>
+    <th>个人中心 · 演示账号登录</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/rescue.png" width="280" alt="实际加载的救助列表和状态更新入口"></td>
+    <td><img src="docs/screenshots/profile.png" width="280" alt="演示账号登录后的个人中心"></td>
+  </tr>
+</table>
+
 ## 已实现
 
 | 功能 | 使用方式 |
@@ -27,7 +50,7 @@
 git clone https://github.com/TimeSeas/aid_station.git
 cd aid_station
 php php/init.php --seed
-php -S 127.0.0.1:8080 -t php php/router.php
+php -S 127.0.0.1:8082 -t php php/router.php
 ```
 
 Windows 也可运行：
@@ -38,11 +61,11 @@ powershell -ExecutionPolicy Bypass -File scripts/start.ps1
 
 此脚本优先使用 PATH 中的 PHP；本机已有 `.runtime/php/php.exe` 时可使用该便携运行环境。运行包不会提交到 GitHub，新电脑仍需安装 PHP。初始化可重复执行，不会清空已有数据。
 
-用微信开发者工具导入**仓库根目录**，确认 `project.config.json` 的 AppID 是自己有权限的项目，或通过工具选择测试号；选择工具中可用的基础库。配置中保留原项目 AppID，AppID 是公开标识，不包含 AppSecret。调试时在「详情 → 本地设置」中关闭域名、TLS 和 HTTPS 证书校验。默认接口地址是 `http://127.0.0.1:8080`。
+用微信开发者工具导入**仓库根目录**，确认 `project.config.json` 的 AppID 是自己有权限的项目，或通过工具选择测试号；选择工具中可用的基础库。配置中保留原项目 AppID，AppID 是公开标识，不包含 AppSecret。调试时在「详情 → 本地设置」中关闭域名、TLS 和 HTTPS 证书校验。默认接口地址是 `http://127.0.0.1:8082`。
 
 首页应显示 3 条示例宠物。进入「我的 → 体验演示账号」即可使用功能。演示账号为共享测试身份，请填写虚构资料。要演示完整审核流程，注册两个手机号格式的虚构账号，分别扮演发布者和申请人。
 
-真机无法访问电脑的 `127.0.0.1`：应将 `utils/config.js` 的 `baseUrl` 和 `php/config.local.php` 的 `base_url` 改为电脑局域网 IP，同时将本地监听地址改为 `0.0.0.0:8080`，手机与电脑连接同一网络。仅在可信局域网调试。
+真机无法访问电脑的 `127.0.0.1`：应将 `utils/config.js` 的 `baseUrl` 和 `php/config.local.php` 的 `base_url` 改为电脑局域网 IP，同时将本地监听地址改为 `0.0.0.0:8082`，手机与电脑连接同一网络。仅在可信局域网调试。
 
 ## 五分钟作品演示
 
@@ -96,7 +119,7 @@ npm run test:api
 
 接口测试会启动自己的临时服务、创建独立测试库，验证后清理，不改动开发数据库。GitHub Actions 会运行语法和自动化检查。详细结果见 [验证记录](docs/verification.md)。
 
-前端测试覆盖页面文件、事件绑定、模块引用、会话恢复、失效登录、失败上传与聊天定时器；本机还使用微信官方编译器检查 WXML/WXSS。编译检查不等同于真机验收，微信登录、拍照选图和真机布局仍需要开发者工具或手机验证。
+前端测试覆盖页面文件、事件绑定、模块引用、会话恢复、失效登录、失败上传与聊天定时器；本机还使用微信官方编译器检查 WXML/WXSS。已在开发者工具中检查首页、论坛标签切换、宠物详情、演示登录和救助列表，并生成上述截图；编译和模拟器检查不等同于真机验收，真实微信登录、拍照选图和真机布局仍需手机验证。
 
 ## 部署和 GitHub 展示
 
